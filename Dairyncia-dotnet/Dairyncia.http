@@ -1,0 +1,6 @@
+@Dairyncia_HostAddress = http://localhost:5225
+
+GET {{Dairyncia_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
