@@ -29,7 +29,7 @@ const developers = [
 
 function About() {
   return (
-    <div className="about-page container my-5">
+    <div className="about-page container my-0">
       <h2 className="text-center mb-4">About Dairyencia</h2>
 
       <p className="text-center">

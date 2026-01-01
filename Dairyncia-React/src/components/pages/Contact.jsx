@@ -28,7 +28,7 @@ function Contact() {
   };
 
   return (
-    <div className="container my-5">
+    <div className="container my-0">
       <h2 className="text-center mb-4">Contact Us</h2>
 
       <Formik

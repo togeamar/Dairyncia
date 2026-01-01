@@ -9,6 +9,7 @@ export function NavigationBar() {
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const pages=["/login","/signup"];
 
   
   useEffect(() => {
@@ -17,6 +18,7 @@ export function NavigationBar() {
     return;
   }
 
+  
   const handleScroll = () => {
     setIsScrolled(window.scrollY > 20);
   };
@@ -88,7 +90,7 @@ export function NavigationBar() {
             </Nav>
 
             <div className="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-              {(!isAuthenticated && location.pathname !== "/signup") ? (
+              {(!isAuthenticated && !pages.includes(location.pathname)) ? (
                 <>
                 <Button 
                   as={Link} 
@@ -104,12 +106,12 @@ export function NavigationBar() {
                     SignUp
                 </Button>
                 </>
-              ) : ((location.pathname!=="/signup")?
+              ) : ((!pages.includes(location.pathname))?
                 <Button 
                   onClick={handleLogout} 
                   className="btn-outline-custom"
                 >
-                  {(location.pathname==="/signup")?"":"Logout"}
+                  Logout
                 </Button>:""
               )}
             </div>

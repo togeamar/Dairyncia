@@ -13,6 +13,8 @@ body {
     background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);
     color: white;
     padding: 100px 0;
+    padding-top: 180px; /* Add extra padding to account for navbar */
+    margin-top: -90px; /* Pull section up behind navbar */
     border-radius: 0 0 50px 50px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     margin-bottom: 3rem;

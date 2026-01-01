@@ -16,7 +16,7 @@
 
 /* Scrolled State (Glassmorphism) */
 .dairyncia-navbar.scrolled {
-  padding: 0.8rem 0;
+  padding: 1.2rem 0;
   background-color: var(--nav-bg-scrolled);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -42,7 +42,7 @@
 .custom-nav-link {
   color: #555 !important;
   font-weight: 500;
-  margin: 0 10px;
+  margin: 0 0px;
   position: relative;
   transition: color 0.3s ease;
 }
