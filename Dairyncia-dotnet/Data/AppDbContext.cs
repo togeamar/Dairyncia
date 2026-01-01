@@ -13,6 +13,11 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<BankDetails> BankDetails { get; set; }
     public DbSet<DairyCenter> DairyCenters { get; set; }
 
+    public DbSet<MilkRateChart> MilkRateCharts { get; set; }
+    public DbSet<MilkRateFirstRow> MilkRateFirstRows { get; set; }
+    public DbSet<MilkRateFirstColumn> MilkRateFirstColumns { get; set; }
+    public DbSet<MilkRateCell> MilkRateCells { get; set; }
+
     public DbSet<Address> Addresses { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -66,6 +71,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(dc => dc.ManagerId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<MilkRateCell>()
+            .HasIndex(x => new { x.Fat, x.Snf, x.MilkRateChartId })
+            .IsUnique();
     }
 
 }

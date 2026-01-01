@@ -42,9 +42,13 @@ export function Login(){
             localStorage.setItem("loggedinuser",decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]);
             localStorage.setItem("loggedinemail",decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]);
             localStorage.setItem("id",decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"])
-            if(res.data.status==="admin") {
+            if(res.data.role.toLowerCase() ==="admin") {
                 navigate("/admin-dashboard")
-            }else{
+            }
+            else if( res.data.role.toLowerCase() === "manager" ){
+                navigate("/manager-dashboard")
+            }
+            else{
                 const customerData = {
                     id: res.data.id,
                     firstName: res.data.username,

@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
-import api from "../../services/api";
+import client from "../../services/client";
+import { ADMIN_BASE_URL, Manager_BASE_URL } from "../../../constants/ApiConstants";
 
-export default function MilkCollectionList() {
+export default function TodaysMilkCollectionList({ refreshKey }) {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
   const [editData, setEditData] = useState(null);
 
-  const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString("en-GB"); 
-  };
-
-  // Fetch records
+  // 🔁 Fetch records
   const fetchRecords = async () => {
     try {
-      const res = await api.get("/admin"); // milk GET added in AdminController
+      setLoading(true);
+      const res = await client.get(`${Manager_BASE_URL}/milk-collection/todays`);
       setRecords(res.data);
     } catch (err) {
       console.error(err);
@@ -25,23 +23,25 @@ export default function MilkCollectionList() {
     }
   };
 
+  // 🔄 refresh on key change
   useEffect(() => {
+    console.log("refreshKey changed:", refreshKey);
     fetchRecords();
-  }, []);
+  }, [refreshKey]);
 
-  // DELETE
+  // 🗑️ DELETE
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this milk record?")) return;
 
     try {
-      await api.delete(`/admin/${id}`);
+      await client.delete(`${ADMIN_BASE_URL}/${id}`);
       fetchRecords();
-    } catch {
+    } catch (err) {
       alert("Delete failed");
     }
   };
 
-  // EDIT
+  // ✏️ EDIT
   const openEdit = (record) => {
     setEditData({ ...record });
     setShowModal(true);
@@ -49,16 +49,16 @@ export default function MilkCollectionList() {
 
   const handleUpdate = async () => {
     try {
-      await api.put(`/admin/${editData.id}`, {
+      await client.put(`${ADMIN_BASE_URL}/${editData.id}`, {
         quantity: editData.quantity,
         fatPercentage: editData.fatPercentage,
         snf: editData.snf,
-        ratePerLiter: editData.ratePerLiter
+        ratePerLiter: editData.ratePerLiter,
       });
 
       setShowModal(false);
       fetchRecords();
-    } catch {
+    } catch (err) {
       alert("Update failed");
     }
   };
@@ -66,15 +66,8 @@ export default function MilkCollectionList() {
   if (loading) return <p className="mt-4">Loading...</p>;
 
   // ENUM MAPS
-  const milkTypeMap = {
-    1: "Cow",
-    2: "Buffalo"
-  };
-
-  const milkShiftMap = {
-    1: "Morning",
-    2: "Evening"
-  };
+  const milkTypeMap = { 1: "Cow", 2: "Buffalo" };
+  const milkShiftMap = { 1: "Morning", 2: "Evening" };
 
   return (
     <div className="card shadow-sm rounded-4">
@@ -88,7 +81,6 @@ export default function MilkCollectionList() {
               <th>Shift</th>
               <th>Quantity</th>
               <th>Total Amount</th>
-              <th>Date</th>
               <th width="160">Actions</th>
             </tr>
           </thead>
@@ -103,13 +95,12 @@ export default function MilkCollectionList() {
             ) : (
               records.map((r) => (
                 <tr key={r.id}>
-                  <td>{r.farmerName}</td>
-                  <td>{r.managerName}</td>
+                  <td>{r.farmer}</td>
+                  <td>{r.manager}</td>
                   <td>{milkTypeMap[r.milkType]}</td>
                   <td>{milkShiftMap[r.milkShift]}</td>
                   <td>{r.quantity}</td>
                   <td>₹ {r.totalAmount}</td>
-                  <td>{formatDate(r.createdAt)}</td>
                   <td>
                     <button
                       className="btn btn-sm btn-primary me-2"
@@ -131,7 +122,7 @@ export default function MilkCollectionList() {
         </table>
       </div>
 
-      {/* EDIT MODAL */}
+      {/* EDIT MODAL (unchanged UI) */}
       {showModal && (
         <div className="modal fade show d-block" style={{ background: "#00000080" }}>
           <div className="modal-dialog">
@@ -145,37 +136,30 @@ export default function MilkCollectionList() {
                 <input
                   type="number"
                   className="form-control mb-2"
-                  placeholder="Quantity"
                   value={editData.quantity}
                   onChange={(e) =>
                     setEditData({ ...editData, quantity: e.target.value })
                   }
                 />
-
                 <input
                   type="number"
                   className="form-control mb-2"
-                  placeholder="Fat %"
                   value={editData.fatPercentage}
                   onChange={(e) =>
                     setEditData({ ...editData, fatPercentage: e.target.value })
                   }
                 />
-
                 <input
                   type="number"
                   className="form-control mb-2"
-                  placeholder="SNF"
                   value={editData.snf}
                   onChange={(e) =>
                     setEditData({ ...editData, snf: e.target.value })
                   }
                 />
-
                 <input
                   type="number"
                   className="form-control"
-                  placeholder="Rate per Liter"
                   value={editData.ratePerLiter}
                   onChange={(e) =>
                     setEditData({ ...editData, ratePerLiter: e.target.value })
@@ -184,10 +168,7 @@ export default function MilkCollectionList() {
               </div>
 
               <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
-                >
+                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
                   Cancel
                 </button>
                 <button className="btn btn-primary" onClick={handleUpdate}>

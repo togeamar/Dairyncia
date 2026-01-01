@@ -1,0 +1,74 @@
+.manager-page {
+    background: #e1ebff;
+    padding: 5% 7%;
+    /* min-height: 100vh; */
+    /* background: linear-gradient(135deg, #f4f6f9, #e9eef5); */
+    /* padding: 40px 50px; */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dashboard-header {
+    margin-bottom: 1.5rem !important;
+    background: white;
+
+    border-radius: 10px;
+}
+
+/* TOTAL MILK */
+.bg-milk-gradient {
+  background: linear-gradient(90deg, #85a7d9, #825fb9);
+  color: #ffffff;
+}
+
+/* COW MILK */
+.bg-cow-gradient {
+  background: linear-gradient(90deg, #7fd3a6, #2fa36b);
+  color: #0f3d2e;
+}
+
+/* BUFFALO MILK */
+.bg-buffalo-gradient {
+  background: linear-gradient(90deg, #f6c58e, #e07a3f);
+  color: #4a260e;
+}
+
+/* Card polish */
+.kpi-card {
+  border-radius: 18px;
+  padding: 1.5rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.kpi-card h6 {
+  opacity: 0.85;
+}
+
+.kpi-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* ===== MODAL OVERLAY ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* ===== MODAL BOX ===== */
+.modal-box {
+  background: #fff;
+  width: 900px;
+  max-width: 95%;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+

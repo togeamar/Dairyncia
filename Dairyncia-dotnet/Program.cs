@@ -96,6 +96,7 @@ builder.Services.AddCors(options =>
 // SWAGGER + JWT SUPPORT
 // =====================================================
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<MilkRateHelper>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo

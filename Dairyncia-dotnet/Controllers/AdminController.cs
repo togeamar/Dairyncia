@@ -51,7 +51,7 @@ namespace Dairyncia.Controllers
                 return BadRequest(roleResult.Errors);
 
             // 5️⃣ DOMAIN LOGIC (IMPORTANT)
-            if (dto.Role == "Farmer")
+            if (dto.Role.ToUpper() == "FARMER")
             {
                 var farmerExists = await _context.Farmers
                     .AnyAsync(f => f.UserId == user.Id);
@@ -70,7 +70,7 @@ namespace Dairyncia.Controllers
             }
 
             // (Optional) If role changed from Farmer → remove Farmer row
-            if (currentRoles.Contains("Farmer") && dto.Role != "Farmer")
+            if (currentRoles.Contains("Farmer") && dto.Role.ToUpper() != "FARMER")
             {
                 var farmer = await _context.Farmers
                     .FirstOrDefaultAsync(f => f.UserId == user.Id);
