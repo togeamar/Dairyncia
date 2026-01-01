@@ -1,0 +1,75 @@
+# ===== GLOBAL =====
+*.log
+*.tmp
+*.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+.env
+.env.*
+
+# =======================
+# REACT (Dairyncia-React)
+# =======================
+Dairyncia-React/node_modules/
+Dairyncia-React/build/
+Dairyncia-React/dist/
+Dairyncia-React/.parcel-cache/
+Dairyncia-React/.next/
+Dairyncia-React/.cache/
+Dairyncia-React/npm-debug.log*
+Dairyncia-React/yarn-error.log*
+
+# =======================
+# .NET (Dairyncia-dotnet)
+# =======================
+Dairyncia-dotnet/bin/
+Dairyncia-dotnet/obj/
+Dairyncia-dotnet/.vs/
+Dairyncia-dotnet/*.user
+Dairyncia-dotnet/*.suo
+Dairyncia-dotnet/appsettings.Development.json
+Dairyncia-dotnet/logs/
+# Optional: ignore global config files
+*.ldb
+
+# =========================
+# SPRING BOOT (Dairyncia-spring)
+# =========================
+Dairyncia-spring/target/
+Dairyncia-spring/.classpath
+Dairyncia-spring/.project
+Dairyncia-spring/.settings/
+Dairyncia-spring/.mvn/wrapper/maven-wrapper.jar
+Dairyncia-spring/logs/
+Dairyncia-spring/*.iml
+
+# =========================
+# JAVA / MAVEN / GRADLE
+# =========================
+*.class
+*.jar
+*.war
+*.ear
+.mvn/
+.gradle/
+build/
+
+# ======================
+# BACKUP / TEMP FILES
+# ======================
+*.bak
+*.old
+*.orig
+*.tmp
+*.cache
+
+Dairyncia-dotnet/bin/Debug/net8.0/Dairyncia.dll
+Dairyncia-dotnet/bin/Debug/net8.0/Dairyncia.pdb
+Dairyncia-dotnet/obj/Debug/net8.0/Dairyncia.AssemblyInfo.cs
+Dairyncia-dotnet/obj/Debug/net8.0/Dairyncia.dll
+Dairyncia-dotnet/obj/Debug/net8.0/Dairyncia.pdb
+Dairyncia-dotnet/obj/Debug/net8.0/Dairyncia.sourcelink.json
+Dairyncia-dotnet/obj/Debug/net8.0/ref/Dairyncia.dll
+Dairyncia-dotnet/obj/Debug/net8.0/refint/Dairyncia.dll
