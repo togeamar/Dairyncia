@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\dOWnloads\\MyProject\\Dairyncia\\Dairyncia-dotnet\\Dairyncia.csproj": {}
+    "/home/amar/LinuxAssignments/Dotnet/Dairyncia/Dairyncia-dotnet/Dairyncia.csproj": {}
   },
   "projects": {
-    "D:\\dOWnloads\\MyProject\\Dairyncia\\Dairyncia-dotnet\\Dairyncia.csproj": {
+    "/home/amar/LinuxAssignments/Dotnet/Dairyncia/Dairyncia-dotnet/Dairyncia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\dOWnloads\\MyProject\\Dairyncia\\Dairyncia-dotnet\\Dairyncia.csproj",
+        "projectUniqueName": "/home/amar/LinuxAssignments/Dotnet/Dairyncia/Dairyncia-dotnet/Dairyncia.csproj",
         "projectName": "Dairyncia",
-        "projectPath": "D:\\dOWnloads\\MyProject\\Dairyncia\\Dairyncia-dotnet\\Dairyncia.csproj",
-        "packagesPath": "C:\\Users\\yashb\\.nuget\\packages\\",
-        "outputPath": "D:\\dOWnloads\\MyProject\\Dairyncia\\Dairyncia-dotnet\\obj\\",
+        "projectPath": "/home/amar/LinuxAssignments/Dotnet/Dairyncia/Dairyncia-dotnet/Dairyncia.csproj",
+        "packagesPath": "/home/amar/.nuget/packages/",
+        "outputPath": "/home/amar/LinuxAssignments/Dotnet/Dairyncia/Dairyncia-dotnet/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\yashb\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/amar/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "10.0.100"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -92,24 +91,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.22, 8.0.22]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.22, 8.0.22]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.22, 8.0.22]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.22, 8.0.22]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -118,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.416/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

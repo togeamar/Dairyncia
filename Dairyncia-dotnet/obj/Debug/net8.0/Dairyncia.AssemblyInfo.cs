@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Dairyncia")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a686c1c9a2e7042bc4f8a49c4ac49ec3aad11f3c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c271499e8cd066fc25fa72c9ac5612590f4b9741")]
 [assembly: System.Reflection.AssemblyProductAttribute("Dairyncia")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Dairyncia")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
