@@ -1,0 +1,110 @@
+
+.mt-10{
+  margin-top: 0px;
+  min-height: calc(100vh - 180px); /* Adjust based on navbar + footer height */
+  display: flex;
+  align-items: center;
+  background-color: #ffffff; /* White background instead of yellow */
+  padding: 2rem 0;
+  background-image: url("../../assets/images/login-background-image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
+  .mt-10 {
+    background-size: contain;  
+    background-position: top;  
+  }
+}
+
+
+.login-card {
+  background: linear-gradient(150deg, #ffffff 0%, var(--accent-color) 50%,var(--secondary-color) 100%) ;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease-in-out;
+}
+
+.login-btn {
+  background: var(--primary-color) ;
+  border: none !important;
+  transition: all .25s ease;
+}
+
+.login-btn:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+}
+.password-icon {
+  color: var(--accent-color);
+  
+  transition: color 0.55s ease-in-out;
+}
+
+
+.btn-outline-secondary:hover .password-icon {
+  color: var(--accent-color);
+  
+}
+
+.btn-outline-secondary{
+  border-color: var(--accent-color);  
+  background-color: #ffffff;
+}
+.btn-outline-secondary:hover {
+  background-color: var(--secondary-color); 
+  border-color: var(--accent-color);     
+  color: var(--accent-color);             
+}
+
+input.form-control {
+  box-shadow: none !important;
+  border: 1px solid var(--accent-color);
+}
+
+input.form-control:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 5px var(--secondary-color) !important;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+}
+.login-title{
+  font-size: 1.8rem;
+    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    
+    color: var(--accent-color);
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.welcome-heading {
+    font-size: 2.8rem;
+    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    
+    color: var(--primary-color);
+    background: linear-gradient(105deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    animation: fadeInWelcome 1.6s ease-out;
+}
+
+@keyframes fadeInWelcome {
+    from {
+        opacity: 0;
+        transform: translateX(-150px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

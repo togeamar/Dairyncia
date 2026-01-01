@@ -22,7 +22,9 @@ public class AuthController : ControllerBase
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
-    {
+    {   
+        Console.WriteLine("➡️ API HIT: /api/auth/register");
+        Console.WriteLine(dto);
         var user = new ApplicationUser
         {
             UserName = dto.Email,
@@ -40,7 +42,9 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
+        Console.WriteLine("➡️ API HIT: /api/auth/login");
         var user = await _userManager.FindByEmailAsync(dto.Email);
+        Console.WriteLine(dto.Email+"ghj"+user);
         if (user == null)
             return Unauthorized();
 
@@ -55,6 +59,7 @@ public class AuthController : ControllerBase
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.FullName),
             new Claim(ClaimTypes.Role, roles.First())
         };
 

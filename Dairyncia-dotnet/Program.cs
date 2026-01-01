@@ -19,6 +19,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
+
+// cors 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+
 // =====================================================
 // IDENTITY
 // =====================================================
@@ -68,10 +83,20 @@ builder.Services.AddAuthorization();
 // =====================================================
 builder.Services.AddControllers();
 
+//cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactApp",
+        policy => policy.WithOrigins("http://localhost:5173")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
 // =====================================================
 // SWAGGER + JWT SUPPORT
 // =====================================================
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<MilkRateHelper>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -158,5 +183,4 @@ app.UseAuthentication();   // MUST be before Authorization
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();

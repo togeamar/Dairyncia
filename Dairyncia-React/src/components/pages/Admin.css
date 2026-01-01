@@ -1,0 +1,106 @@
+/* Page background */
+.admin-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f4f6f9, #e9eef5);
+  padding: 40px 50px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Page title */
+.admin-page h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+/* Tabs container */
+.nav-tabs {
+  border-bottom: none;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Tab button */
+.nav-tabs .nav-link {
+  border: none;
+  border-radius: 10px;
+  margin-right: 8px;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.nav-tabs .nav-link:hover {
+  background-color: #f1f5ff;
+  color: #0d6efd;
+}
+
+/* Active tab */
+.nav-tabs .nav-link.active {
+  background: linear-gradient(135deg, #0d6efd, #4e8cff);
+  color: white;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.35);
+}
+
+/* Content area */
+.tab-content {
+  margin-top: 30px;
+  background: white;
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Tables */
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Table header */
+.table thead {
+  background: #0d6efd;
+  color: white;
+}
+
+.table thead th {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Table rows */
+.table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f4f8ff;
+}
+
+/* Buttons inside tables */
+.table button,
+.table .btn {
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+
+/* Section headings (inside components) */
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 15px;
+}
+
+/* Empty state text */
+.text-center {
+  color: #888;
+  font-style: italic;
+}

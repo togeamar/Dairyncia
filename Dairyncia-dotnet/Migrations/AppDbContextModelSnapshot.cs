@@ -51,7 +51,7 @@ namespace Dairyncia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("Dairyncia.Models.ApplicationUser", b =>

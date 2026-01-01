@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Droplet, Users, TrendingUp, Truck, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Carousel, Container, Row, Col, Card, Badge } from "react-bootstrap";
 import "./Home.css";
 
 export function Home() {
+
+  const [loggedinUser,setLoggedInUser]=useState(localStorage.getItem("loggedinuser"));
+
 
   return (
     <>     
@@ -19,7 +22,7 @@ export function Home() {
                 <div className="mb-4">
                   <Droplet size={64} className="text-white mb-3" />
                 </div>
-                <h1 className="hero-title mb-3">Welcome to Dairyncia</h1>
+                <h1 className="hero-title mb-3">Welcome to Dairyncia{loggedinUser?`, ${loggedinUser}`:""}</h1>
                 <p className="hero-subtitle mb-5">
                   The ultimate solution for efficient milk collection and management. 
                   Bridge the gap between local farmers and major milk companies with precision and trust.
