@@ -1,0 +1,117 @@
+/* ===============================
+   ABOUT PAGE STYLING
+================================ */
+
+.about-page h2 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  letter-spacing: -0.5px;
+}
+
+.about-page p {
+  font-size: 18px;
+  color: #555;
+  max-width: 900px;
+  margin: auto;
+}
+
+/* Section Headings */
+.about-page h4 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #007bff;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* ===============================
+   DEVELOPER CARDS
+================================ */
+
+.about-page .row {
+  gap: 10px;
+}
+
+/* Card Styling */
+.about-page .card {
+  border: none;
+  border-radius: 10px;
+  transition: all 0.35s ease;
+  background: #ffffff;
+   animation: fadeUp 0.6s ease forwards;
+  opacity: 0;
+   margin-left: 10px;
+  margin-right: 10px;
+  max-width: 220px;
+}
+.about-page .row {
+  --bs-gutter-x: 0.8rem; /* default is ~1.5rem */
+}
+
+/* Hover Animation */
+.about-page .card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Image Styling */
+.dev-image {
+  width: 110px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10%;
+  margin: 20px auto 10px;
+  transition: transform 0.3s ease;
+}
+
+/* Image hover effect */
+.card:hover .dev-image {
+  transform: scale(1.1);
+}
+
+/* Card Body */
+.card-body {
+  padding: 10px 15px 20px;
+}
+
+/* Developer Name */
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* LinkedIn Link */
+.card-body a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.card-body a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* ===============================
+   ONE-LINE LAYOUT (DESKTOP)
+================================ */
+
+@media (min-width: 992px) {
+  .about-page .col-lg-3 {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

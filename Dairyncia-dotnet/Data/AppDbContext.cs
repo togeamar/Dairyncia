@@ -12,6 +12,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<MilkCollection> MilkCollections { get; set; }
     public DbSet<BankDetails> BankDetails { get; set; }
     public DbSet<DairyCenter> DairyCenters { get; set; }
+    public DbSet<ContactMessage> ContactMessages { get; set; }
 
     public DbSet<MilkRateChart> MilkRateCharts { get; set; }
     public DbSet<MilkRateFirstRow> MilkRateFirstRows { get; set; }
@@ -22,6 +23,22 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        // ContactMessage constraints
+builder.Entity<ContactMessage>(entity =>
+{
+    entity.Property(e => e.Name)
+          .IsRequired();
+
+    entity.Property(e => e.Email)
+          .IsRequired();
+
+    entity.Property(e => e.Purpose)
+          .IsRequired();
+
+    entity.Property(e => e.CreatedAt)
+          .IsRequired();
+});
 
         // Farmer → User
         builder.Entity<Farmer>()

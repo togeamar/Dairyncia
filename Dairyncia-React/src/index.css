@@ -1,0 +1,11 @@
+/* Global styles for the entire app */
+
+/* Fix content hiding behind fixed navbar */
+body {
+  padding-top: 90px;
+}
+
+/* Optional: global font smoothing */
+* {
+  box-sizing: border-box;
+}

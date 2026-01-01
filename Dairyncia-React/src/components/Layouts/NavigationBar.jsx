@@ -12,12 +12,18 @@ export function NavigationBar() {
 
   
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  if (location.pathname !== "/") {
+    setIsScrolled(true);
+    return;
+  }
+
+  const handleScroll = () => {
+    setIsScrolled(window.scrollY > 20);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [location.pathname]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
