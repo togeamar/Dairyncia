@@ -17,9 +17,13 @@ namespace Dairyncia.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ContactMessageRequestDto dto)
+        public async Task<IActionResult> Create([FromBody]ContactMessageRequestDto dto)
         {
-            // Custom validations (NO DataAnnotations)
+            // Custom validations 
+             if (dto == null)
+    {
+        return BadRequest("Invalid request body");
+    }
             if (string.IsNullOrWhiteSpace(dto.Name))
             {
                 return Problem(

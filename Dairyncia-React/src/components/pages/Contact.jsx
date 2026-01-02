@@ -1,6 +1,18 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
 
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { sendContactMessage } from "../../services/contactService";
+/* Contact form with validation using Formik 
+Formik is a popular library for handling forms in React applications. It simplifies form management by providing tools for form state management, validation, and submission handling.
+it reduces the boilerplate code required to create and manage forms, making it easier to build complex forms with less effort.
+builtin validation handling ahe  */
+
+/* Contact component jevha user contact form submit krnar tyaveli handleSubmit function call honar
+renders a contact form with fields for name, email, and purpose. It uses Formik for form state management and validation.
+The validate function checks for required fields and valid email format, returning error messages if validation fails.
+On successful submission, handleSubmit logs the form data, shows a success alert, and resets the form.
+*/
 function Contact() {
+  /* Values means object containing form data*/
   const validate = (values) => {
     const errors = {};
 
@@ -17,15 +29,23 @@ function Contact() {
     if (!values.purpose) {
       errors.purpose = "Please tell us why you are contacting";
     }
-
+/*errors object madhe je key ahet tyanchya values form madhe display honar */
     return errors;
   };
 
-  const handleSubmit = (values, { resetForm }) => {
-    console.log("Contact Data:", values);
-    alert("Message submitted successfully");
+  /* here request should go to backend ,form is valid then user clicks submit formik calls handle submit */
+ const handleSubmit = async (values, { resetForm }) => {
+  try {
+    const response = await sendContactMessage(values);
+
+    alert(response.data.message);
     resetForm();
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Error while sending message");
+  }
+};
+
 
   return (
     <div className="container my-0">
