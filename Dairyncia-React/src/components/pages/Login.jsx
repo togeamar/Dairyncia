@@ -54,8 +54,8 @@ export function Login(){
                     firstName: res.data.username,
                     email: res.data.email
                 };
-                localStorage.setItem("customer", JSON.stringify(customerData));
-                navigate("/customer-dashboard");
+                localStorage.setItem("farmer"/*, JSON.stringify(customerData)*/);
+                navigate("/farmer-dashboard");
             }
         }
         catch(error){
