@@ -16,11 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+public class User extends BaseEntity{
 
     @NotBlank
     @Size(max = 100)

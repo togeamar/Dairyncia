@@ -1,12 +1,19 @@
 package com.dairyncia.controllers;
 
-import com.dairyncia.dto.admin.*;
+import com.dairyncia.dto.ApiResponse;
+import com.dairyncia.dto.AssignRoleDto;
+import com.dairyncia.dto.FarmerListDTO;
+import com.dairyncia.dto.PendingUserDto;
 import com.dairyncia.entities.*;
 import com.dairyncia.custom_exception.BadRequestException;
 import com.dairyncia.custom_exception.ResourceNotFoundException;
 import com.dairyncia.repository.*;
+import com.dairyncia.service.AdminService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,71 +30,28 @@ public class AdminController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final FarmerRepository farmerRepository;
-    private final AddressRepository addressRepository;
-    private final BankDetailsRepository bankDetailsRepository;
-    private final MilkCollectionRepository milkCollectionRepository;
+    //private final AddressRepository addressRepository;
+    //private final BankDetailsRepository bankDetailsRepository;
+    //private final MilkCollectionRepository milkCollectionRepository;
+    private final AdminService adminService;
 
     // ================= ASSIGN ROLE =================
     @PostMapping("/assign-role")
     public ResponseEntity<?> assignRole(@Valid @RequestBody AssignRoleDto dto) {
+        ApiResponse response=adminService.assignRole(dto);
         
-        // Find user
-        User user = userRepository.findByEmail(dto.getEmail())
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        // Validate role
-        Role.RoleType roleType;
-        try {
-            roleType = Role.RoleType.valueOf("ROLE_" + dto.getRole().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Invalid role: " + dto.getRole());
-        }
-
-        Role role = roleRepository.findByName(roleType)
-            .orElseThrow(() -> new ResourceNotFoundException("Role does not exist"));
-
-        // Remove existing roles (single-role system)
-        user.clearRoles();
-
-        // Assign new role
-        user.addRole(role);
-        userRepository.save(user);
-
-        // DOMAIN LOGIC: Create Farmer record if role is FARMER
-        if (roleType == Role.RoleType.ROLE_FARMER) {
-            if (!farmerRepository.existsByUserId(user.getId())) {
-                Farmer farmer = Farmer.builder()
-                    .userId(user.getId())
-                    .build();
-                farmerRepository.save(farmer);
-            }
-        } else {
-            // Remove Farmer record if changing from FARMER
-            farmerRepository.findByUserId(user.getId())
-                .ifPresent(farmerRepository::delete);
-        }
-
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Role '" + dto.getRole() + "' assigned successfully");
-        response.put("email", user.getEmail());
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     // ================= PENDING USERS =================
-    @GetMapping("/pending-users")
+    /*@GetMapping("/pending-users")
     public ResponseEntity<List<PendingUserDto>> getPendingUsers() {
         List<User> pendingUsers = userRepository.findPendingUsers();
         
         List<PendingUserDto> result = new ArrayList<>();
         for (int i = 0; i < pendingUsers.size(); i++) {
             User u = pendingUsers.get(i);
-            result.add(PendingUserDto.builder()
-                .srNo(i + 1)
-                .userId(u.getId())
-                .email(u.getEmail())
-                .fullName(u.getFullName())
-                .phone(u.getPhoneNumber())
-                .build());
+            result.add(new PendingUserDto(i+1,u.getId(),u.getEmail(),u.getFullName(),u.getPhoneNumber()));
         }
         
         return ResponseEntity.ok(result);
@@ -226,7 +190,7 @@ public class AdminController {
 
         userRepository.delete(manager);
         return ResponseEntity.ok("Manager deleted successfully");
-    }
+    }*/
 
     // Continue in next artifact...
 }

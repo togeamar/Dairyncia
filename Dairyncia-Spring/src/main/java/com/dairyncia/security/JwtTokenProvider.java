@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import javax.crypto.SecretKey;
 
 @Component
 public class JwtTokenProvider {
@@ -28,29 +32,35 @@ public class JwtTokenProvider {
 
     @Value("${jwt.audience}")
     private String audience;
+    
+    private SecretKey Key;
 
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+    @PostConstruct
+    private void init() {
+    	if(secret==null || secret.length()<32) {
+    		throw new IllegalStateException("key too short");
+    	}
+    	this.Key=Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     // Generate token matching .NET format
-    public String generateToken(UserDetails userDetails, String role, String fullName) {
+    public String generateToken(CustomUserDetails userDetails, String role, String fullName) {
         Map<String, Object> claims = new HashMap<>();
         
         // Match .NET ClaimTypes format
         claims.put("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress", 
-                   userDetails.getUsername());
+                   userDetails.getUser().getEmail());
         claims.put("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", fullName);
         claims.put("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role", role);
         
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuer(issuer)
-                .setAudience(audience)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuer(issuer)
+                .audience().add(audience).and()
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(Key)
                 .compact();
     }
 
@@ -68,18 +78,18 @@ public class JwtTokenProvider {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+        return Jwts.parser()
+                .verifyWith(Key)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, CustomUserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }

@@ -8,12 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "farmers")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Farmer {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder @ToString(callSuper=true,exclude={"milkCollections", "user", "address"})
+public class Farmer extends BaseEntity{
 
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -21,7 +17,7 @@ public class Farmer {
     private User user;
 
     @Column(name = "address_id")
-    private Integer addressId;
+    private Long addressId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", insertable = false, updatable = false)

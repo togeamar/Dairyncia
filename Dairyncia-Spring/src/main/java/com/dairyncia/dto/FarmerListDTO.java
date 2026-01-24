@@ -1,4 +1,4 @@
-package com.dairyncia.dto.admin;
+package com.dairyncia.dto;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class FarmerListDTO {
-	private int farmerID;
+	private Long farmerID;
 	private String email;
 	private String fullName;
     private LocalDateTime createdAt;

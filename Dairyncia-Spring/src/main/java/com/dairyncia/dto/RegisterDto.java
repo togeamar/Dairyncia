@@ -1,4 +1,4 @@
-package com.dairyncia.dto.auth;
+package com.dairyncia.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

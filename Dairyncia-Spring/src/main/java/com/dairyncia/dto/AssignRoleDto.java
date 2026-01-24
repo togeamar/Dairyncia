@@ -1,4 +1,4 @@
-package com.dairyncia.dto.admin;
+package com.dairyncia.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;

@@ -3,6 +3,9 @@ package com.dairyncia.entities;
 import java.math.BigDecimal;
 
 import com.dairyncia.entities.BaseEntity;
+import com.dairyncia.enums.MilkShift;
+import com.dairyncia.enums.MilkType;
+import com.dairyncia.enums.PaymentStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

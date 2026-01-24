@@ -2,6 +2,8 @@ package com.dairyncia.entities;
 
 import java.math.BigDecimal;
 
+import com.dairyncia.enums.MilkType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,33 +1,36 @@
 server:
-  port: 5225  # Same as .NET backend
+  port: 5225
 
 spring:
   application:
     name: Dairyncia
-  
+
   datasource:
     url: jdbc:mysql://localhost:3306/dairyncia_db?createDatabaseIfNotExist=true
-    username: root
-    password: cdac
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:cdac}
     driver-class-name: com.mysql.cj.jdbc.Driver
-  
+
   jpa:
+    open-in-view: false
+    show-sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
-  
+
   jackson:
     serialization:
       write-dates-as-timestamps: false
-    default-property-inclusion: non_null
+    default-property-inclusion: non-null
 
+
+# JWT Configuration
 jwt:
-  secret: Dairyncia_Super_Secret_Key_2025_Production
-  expiration: 10800000  # 3 hours in milliseconds
+  secret: ${JWT_SECRET:Dairyncia_Super_Secret_Key_2025_Production_MinimumLength32Characters}
+  expiration: ${JWT_EXPIRATION:900000}  # 15 minutes default
   issuer: DairynciaAPI
   audience: DairynciaClient
 

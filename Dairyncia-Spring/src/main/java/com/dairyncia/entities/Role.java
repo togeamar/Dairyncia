@@ -10,11 +10,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class Role extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    
 
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false, length = 20)
@@ -26,8 +24,5 @@ public class Role {
         ROLE_FARMER
     }
 
-    // Convenience constructors
-    public Role(RoleType name) {
-        this.name = name;
-    }
+    
 }

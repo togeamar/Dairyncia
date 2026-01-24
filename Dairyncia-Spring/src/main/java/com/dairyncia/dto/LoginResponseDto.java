@@ -1,4 +1,4 @@
-package com.dairyncia.dto.auth;
+package com.dairyncia.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
