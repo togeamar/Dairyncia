@@ -51,5 +51,8 @@ namespace Dairyncia.Models
         [Required]
         [EnumDataType(typeof(PaymentStatus))]
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
+        public int? PaymentSettlementId { get; set; }
+public PaymentSettlement PaymentSettlement { get; set; }
+
     }
 }

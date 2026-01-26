@@ -19,7 +19,9 @@ namespace Dairyncia.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]ContactMessageRequestDto dto)
         {
+            Console.WriteLine("Received contact message:");
             // Custom validations 
+            //To avoid NullReferenceException and handle invalid request bodies safely.
              if (dto == null)
     {
         return BadRequest("Invalid request body");

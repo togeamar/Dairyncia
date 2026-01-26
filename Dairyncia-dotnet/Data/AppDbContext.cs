@@ -20,6 +20,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<MilkRateCell> MilkRateCells { get; set; }
 
     public DbSet<Address> Addresses { get; set; }
+    public DbSet<PaymentSettlement> PaymentSettlements { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
