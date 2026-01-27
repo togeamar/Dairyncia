@@ -25,6 +25,10 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={"Manager"}/>}>
             <Route path="manager-dashboard" element={<Manager />} />
           </Route>
+          <Route element={<ProtectedRoute allowedRoles={"Farmer"} />}>
+  <Route path="farmer-dashboard" element={<FarmerDashboard />} />
+</Route>
+
         </Route>
       </Routes>
     </BrowserRouter>
