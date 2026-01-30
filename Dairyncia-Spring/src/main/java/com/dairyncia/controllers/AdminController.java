@@ -2,7 +2,6 @@ package com.dairyncia.controllers;
 
 import com.dairyncia.dto.ApiResponse;
 import com.dairyncia.dto.AssignRoleDto;
-import com.dairyncia.dto.FarmerListDTO;
 import com.dairyncia.dto.PendingUserDto;
 import com.dairyncia.entities.*;
 import com.dairyncia.custom_exception.BadRequestException;

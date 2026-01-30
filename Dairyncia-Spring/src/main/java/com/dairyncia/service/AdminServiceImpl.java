@@ -1,6 +1,7 @@
 package com.dairyncia.service;
 
 import java.util.HashMap;
+
 import java.util.Map;
 
 import org.modelmapper.ModelMapper;
@@ -15,7 +16,7 @@ import com.dairyncia.dto.AssignRoleDto;
 import com.dairyncia.entities.Farmer;
 import com.dairyncia.entities.Role;
 import com.dairyncia.entities.User;
-import com.dairyncia.repository.FarmerRepository;
+
 import com.dairyncia.repository.RoleRepository;
 import com.dairyncia.repository.UserRepository;
 
@@ -30,7 +31,7 @@ public class AdminServiceImpl implements AdminService{
 
 	private final RoleRepository roleRepository;
 	
-	private final FarmerRepository farmerRepository;
+
 	
 	private final ModelMapper modelMapper;
 	
@@ -59,19 +60,6 @@ public class AdminServiceImpl implements AdminService{
 	    user.addRole(role);
 	    userRepository.save(user);
 	
-	    // DOMAIN LOGIC: Create Farmer record if role is FARMER
-	    if (roleType == Role.RoleType.ROLE_FARMER) {
-	        if (!farmerRepository.existsByUserId(user.getId())) {
-	            Farmer farmer = Farmer.builder()
-	                .user(user)
-	                .build();
-	            farmerRepository.save(farmer);
-	        }
-	    } else {
-	        // Remove Farmer record if changing from FARMER
-	        farmerRepository.findByUserId(user.getId())
-	            .ifPresent(farmerRepository::delete);
-	    }
 	    String message="Role" + dto.getRole() + "assigned successfully";
 	    ApiResponse response=new ApiResponse(message,"200");
 	    //response.put();
