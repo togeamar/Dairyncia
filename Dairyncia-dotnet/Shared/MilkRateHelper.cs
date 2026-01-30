@@ -12,22 +12,23 @@ public class MilkRateHelper
 
     public async Task<decimal> GetRatePerLiter(decimal fat, decimal snf, MilkType milkType)
     {
-        // 🔑 ROUND DOWN to nearest 0.1
-        fat = Math.Floor(fat * 10) / 10;
-        snf = Math.Floor(snf * 10) / 10;
+        fat = Math.Round(fat, 2);
+        snf = Math.Round(snf, 2);
 
         var rate = await _context.MilkRateCells
-            .Include(x => x.MilkRateChart)
             .Where(x =>
-                x.Fat == fat &&
-                x.Snf == snf &&
                 x.MilkRateChart.MilkType == milkType &&
                 x.MilkRateChart.IsActive)
+            .OrderBy(x =>
+                Math.Abs(x.Fat - fat) +
+                Math.Abs(x.Snf - snf))
             .Select(x => x.Rate)
             .FirstOrDefaultAsync();
 
         return rate;
     }
+
+
 
     public async Task<decimal> CalculateAmount(decimal fat, decimal snf, decimal litres, MilkType milkType)
     {

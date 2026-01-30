@@ -9,6 +9,8 @@
         public string Email { get; set; }
         public string Phone { get; set; }
 
+        public string ManagerName { get; set; }
+
         public AddressDto? Address { get; set; }
         public BankDetailsDto? BankDetails { get; set; }
     }

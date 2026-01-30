@@ -31,12 +31,12 @@ namespace Dairyncia.Controllers
         [HttpPost("assign-role")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto dto)
         {
-            // 1️⃣ Find user
+            //  Find user
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
                 return NotFound("User not found");
 
-            // 2️⃣ Validate role
+            // Validate role
             if (!await _roleManager.RoleExistsAsync(dto.Role))
                 return BadRequest("Role does not exist");
 
@@ -50,7 +50,7 @@ namespace Dairyncia.Controllers
             if (!roleResult.Succeeded)
                 return BadRequest(roleResult.Errors);
 
-            // 5️⃣ DOMAIN LOGIC (IMPORTANT)
+            //  DOMAIN LOGIC (IMPORTANT)
             if (dto.Role.ToUpper() == "FARMER")
             {
                 var farmerExists = await _context.Farmers
@@ -61,6 +61,7 @@ namespace Dairyncia.Controllers
                     var farmer = new Farmer
                     {
                         UserId = user.Id,
+                        ManagerId = dto.ManagerId,
                         AddressId = null // Address can be added later
                     };
 
@@ -126,19 +127,34 @@ namespace Dairyncia.Controllers
         [HttpGet("farmers")]
         public async Task<IActionResult> GetAllFarmers()
         {
-            var farmers = await _context.Farmers
-            .Include(f => f.User)
-            .Include(f => f.Address)
-            .OrderByDescending(f => f.CreatedAt)
-            .Select(f => new FarmerListDTO
+            try
             {
-                FarmerId = f.Id,
-                Email = f.User.Email,
-                FullName = f.User.FullName,
-                CreatedAt = f.CreatedAt
-            })
-            .ToListAsync();
-            return Ok(farmers);
+                var managersDict = await _context.Users
+                        .ToDictionaryAsync(u => u.Id, u => u.FullName);
+
+                var farmers = await _context.Farmers
+                .Include(f => f.User)
+                .Include(f => f.Address)
+                .OrderByDescending(f => f.CreatedAt)
+                .Select(f => new FarmerListDTO
+                {
+                    FarmerId = f.Id,
+                    Email = f.User.Email,
+                    FullName = f.User.FullName,
+                    ManagerName = f.ManagerId != null && managersDict.ContainsKey(f.ManagerId)
+                        ? managersDict[f.ManagerId]
+                        : null,
+                    CreatedAt = f.CreatedAt
+                })
+                .ToListAsync();
+
+                return Ok(farmers);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         // famer details by id
@@ -156,6 +172,10 @@ namespace Dairyncia.Controllers
             var bank = await _context.BankDetails
                 .FirstOrDefaultAsync(b => b.UserId == farmer.UserId);
 
+            // create dictionary for manager
+            var managerDict = await _context.Users
+                .ToDictionaryAsync(u => u.Id, u => u.FullName);
+
             return Ok(new FarmerDetailsDto
             {
                 FarmerId = farmer.Id,
@@ -163,6 +183,7 @@ namespace Dairyncia.Controllers
                 FullName = farmer.User.FullName,
                 Email = farmer.User.Email,
                 Phone = farmer.User.PhoneNumber,
+                ManagerName = managerDict[farmer.UserId],
                 Address = farmer.Address == null ? null : new AddressDto
                 {
                     AddressId = farmer.Address.Id,

@@ -28,14 +28,15 @@ export default function FarmerList() {
     ifsc: "",
   });
 
-  //  LOAD FARMERS 
+  // ================= LOAD FARMERS =================
   useEffect(() => {
     loadFarmers();
   }, []);
 
   const loadFarmers = async () => {
     try {
-      const res = await api.get("/admin/farmers");
+      const managerId = localStorage.getItem("id");
+      const res = await api.get(`/manager/get-farmer-list/${managerId}`);
       setFarmers(res.data);
     } catch {
       alert("Failed to load farmers");
@@ -44,7 +45,7 @@ export default function FarmerList() {
     }
   };
 
-  //  OPEN MODAL 
+  // ================= OPEN MODAL =================
   const openModal = async (farmerId, formType) => {
     try {
       const res = await api.get(`/admin/farmers/${farmerId}`);
@@ -93,7 +94,7 @@ export default function FarmerList() {
     setSelectedFarmer(null);
   };
 
-  //  SAVE PROFILE 
+  // ================= SAVE PROFILE =================
   const saveProfile = async () => {
     try {
       await api.put(
@@ -108,7 +109,7 @@ export default function FarmerList() {
     }
   };
 
-  //  SAVE ADDRESS 
+  // ================= SAVE ADDRESS =================
   const saveAddress = async () => {
     try {
       await api.post(
@@ -136,7 +137,7 @@ export default function FarmerList() {
     }
   };
 
-  //  DELETE FARMER 
+  // ================= DELETE FARMER =================
   const deleteFarmer = async (farmerId) => {
     if (!window.confirm("Are you sure you want to delete this farmer?")) return;
 
@@ -160,14 +161,13 @@ export default function FarmerList() {
     <div style={{ paddingTop: "100px", padding: "30px" }}>
       <h2>Farmer Management</h2>
 
-      {/*  FARMER TABLE  */}
+      {/* ================= FARMER TABLE ================= */}
       <table className="table table-bordered table-striped mt-3">
         <thead className="table-dark">
           <tr>
             <th>ID</th>
             <th>Full Name</th>
             <th>Email</th>
-            <th>Manager</th>
             <th>Created</th>
             <th width="350">Actions</th>
           </tr>
@@ -185,7 +185,6 @@ export default function FarmerList() {
                 <td>{f.farmerId}</td>
                 <td>{f.fullName}</td>
                 <td>{f.email}</td>
-                <td>{f.managerName}</td>
                 <td>{new Date(f.createdAt).toLocaleDateString()}</td>
                 <td>
                   <button
@@ -222,7 +221,7 @@ export default function FarmerList() {
         </tbody>
       </table>
 
-      {/* MODAL */}
+      {/* ================= MODAL ================= */}
       {showModal && (
         <>
           <div className="modal fade show d-block">

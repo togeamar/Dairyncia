@@ -7,8 +7,9 @@ const ManagerDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const managerId = localStorage.getItem("id");
     axios
-      .get(`${Manager_BASE_URL}/get-farmer-milk-collection`)
+      .get(`${Manager_BASE_URL}/get-farmer-milk-collection/${managerId}`)
       .then(res => {
         setFarmers(res.data);
         setLoading(false);
@@ -26,7 +27,7 @@ const ManagerDashboard = () => {
       </div>
     );
 
-  // ===== TOTALS =====
+  // TOTALS 
   const totalCowMilk = farmers.reduce(
     (s, f) => s + f.cowMorningMilkCount + f.cowEveningMilkCount,
     0
@@ -107,7 +108,7 @@ const ManagerDashboard = () => {
 );
 };
 
-// ===== KPI CARD =====
+//KPI CARD
 const KpiCard = ({ title, value, bg }) => {
   return (
     <div className="col-md-4">
