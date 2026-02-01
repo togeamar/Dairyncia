@@ -53,15 +53,15 @@ namespace Dairyncia.Controllers
             var tomorrow = today.AddDays(1);
 
             var alreadySubmitted = await _context.MilkCollections
-                .Where(x =>
+                .AnyAsync(x =>
                     x.FarmerId == farmer.Id &&
                     x.MilkShift == dto.MilkShift &&
                     x.MilkType == dto.MilkType &&
                     x.CreatedAt >= today &&
-                    x.CreatedAt < tomorrow)
-                .ToListAsync();
+                    x.CreatedAt < tomorrow);
+                
 
-            if (alreadySubmitted.Count > 0)
+            if (alreadySubmitted)
             {
                 return BadRequest("Milk collection for this farmer is already submitted today.");
             }
@@ -69,9 +69,9 @@ namespace Dairyncia.Controllers
             var ratePerLiter = await _milkRateHelper
                 .GetRatePerLiter(dto.FatPercentage, dto.SNF, dto.MilkType);
 
-            if (ratePerLiter == 0)
+            if (!ratePerLiter.IsSuccess)
             {
-                return NotFound($"Rate not found for FAT:{dto.FatPercentage}, SNF:{dto.SNF}");
+                return NotFound(new{message=ratePerLiter.Error});
             }
 
             // Create MilkCollection Entity
@@ -84,8 +84,8 @@ namespace Dairyncia.Controllers
                 Quantity = dto.Quantity,
                 FatPercentage = dto.FatPercentage,
                 SNF = dto.SNF,
-                RatePerLiter = ratePerLiter,
-                TotalAmount = ratePerLiter * dto.Quantity,
+                RatePerLiter = ratePerLiter.Data.Rate,
+                TotalAmount = ratePerLiter.Data.Rate * dto.Quantity,
                 PaymentStatus = PaymentStatus.Pending
             };
 
@@ -97,7 +97,8 @@ namespace Dairyncia.Controllers
             {
                 message = "Milk collection added successfully",
                 milkCollection.Id,
-                milkCollection.TotalAmount
+                milkCollection.TotalAmount,
+                isExactMatch = ratePerLiter.Data.IsExactMatch
             });
         }
 
@@ -194,8 +195,8 @@ namespace Dairyncia.Controllers
             milk.Quantity = dto.Quantity;
             milk.FatPercentage = dto.FatPercentage;
             milk.SNF = dto.SNF;
-            milk.RatePerLiter = ratePerLiter;
-            milk.TotalAmount = ratePerLiter * dto.Quantity;
+            milk.RatePerLiter = ratePerLiter.Data.Rate;
+            milk.TotalAmount = ratePerLiter.Data.Rate * dto.Quantity;
 
             await _context.SaveChangesAsync();
 

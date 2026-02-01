@@ -56,14 +56,14 @@ export function Login(){
             let message = "Something went wrong";
 
             if (error.response) {
-                message = error.response.data?.message || "Server error";
+                message = error.response.data || "Server error";
             } else if (error.request) {
                 message = "Network error. Please check your connection.";
             } else {
                 message = error.message;
             }
-            console.error("Login error2:", message );
-            //alert(error.response?.data?.message || "Login Failed");
+            
+            
             setLoginError(message );
         }
         finally{

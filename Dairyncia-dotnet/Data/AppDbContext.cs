@@ -14,31 +14,29 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<DairyCenter> DairyCenters { get; set; }
     public DbSet<ContactMessage> ContactMessages { get; set; }
 
-    public DbSet<MilkRateChart> MilkRateCharts { get; set; }
-    public DbSet<MilkRateFirstRow> MilkRateFirstRows { get; set; }
-    public DbSet<MilkRateFirstColumn> MilkRateFirstColumns { get; set; }
-    public DbSet<MilkRateCell> MilkRateCells { get; set; }
+    public DbSet<MilkRate> MilkRates {get;set;}
 
     public DbSet<Address> Addresses { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
+
         // ContactMessage constraints
-builder.Entity<ContactMessage>(entity =>
-{
-    entity.Property(e => e.Name)
-          .IsRequired();
+        builder.Entity<ContactMessage>(entity =>
+        {
+            entity.Property(e => e.Name)
+                .IsRequired();
 
-    entity.Property(e => e.Email)
-          .IsRequired();
+            entity.Property(e => e.Email)
+                .IsRequired();
 
-    entity.Property(e => e.Purpose)
-          .IsRequired();
+            entity.Property(e => e.Purpose)
+                .IsRequired();
 
-    entity.Property(e => e.CreatedAt)
-          .IsRequired();
-});
+            entity.Property(e => e.CreatedAt)
+                .IsRequired();
+        });
 
         // Farmer → User
         builder.Entity<Farmer>()
@@ -89,9 +87,9 @@ builder.Entity<ContactMessage>(entity =>
             .HasForeignKey(dc => dc.ManagerId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Entity<MilkRateCell>()
-            .HasIndex(x => new { x.Fat, x.Snf, x.MilkRateChartId })
-            .IsUnique();
+        builder.Entity<MilkRate>()
+            .HasIndex(m => new { m.Fat, m.Snf, m.RateType})
+            .HasDatabaseName("IX_MilkRate_Lookup");
     }
 
 }

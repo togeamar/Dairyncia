@@ -20,18 +20,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 
-// cors 
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
 
 
 // =====================================================
@@ -83,14 +71,17 @@ builder.Services.AddAuthorization();
 // =====================================================
 builder.Services.AddControllers();
 
-//cors
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("ReactApp",
-        policy => policy.WithOrigins("http://localhost:5173")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
 });
+
 
 // =====================================================
 // SWAGGER + JWT SUPPORT
@@ -131,19 +122,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// =====================================================
-// CORS (REACT FRONTEND)
-// =====================================================
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
 
 
 // =====================================================
