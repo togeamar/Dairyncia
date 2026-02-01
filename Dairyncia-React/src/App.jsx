@@ -18,16 +18,16 @@ function App() {
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
-          <Route element={<ProtectedRoute allowedRoles={"Admin"}/>}>
+          <Route element={<ProtectedRoute allowedRoles={["Admin","ADMIN"]}/>}>
             <Route path="admin-dashboard" element={<Admin />} />
           </Route>
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
-          <Route element={<ProtectedRoute allowedRoles={"Manager"}/>}>
+          <Route element={<ProtectedRoute allowedRoles={["Manager","MANAGER"]}/>}>
             <Route path="manager-dashboard" element={<Manager />} />
           </Route>
 
-          <Route element={<ProtectedRoute allowedRoles={"Farmer"} />}>
+          <Route element={<ProtectedRoute allowedRoles={["Farmer","FARMER"]} />}>
             <Route path="farmer-dashboard" element={<Farmer />} />
           </Route>
 

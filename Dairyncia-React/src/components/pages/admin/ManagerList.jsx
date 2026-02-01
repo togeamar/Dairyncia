@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../services/api";
+import client from "../../../services/client";
 import { Modal, Button, Form } from "react-bootstrap";
 
 export default function ManagerList() {
@@ -16,7 +16,7 @@ export default function ManagerList() {
   // load managers
   const loadManagers = async () => {
     try {
-      const response = await api.get("/admin/managers");
+      const response = await client.get("/admin/managers");
       setManagers(response.data);
     } catch (err) {
       setError("Failed to load managers");
@@ -33,14 +33,14 @@ export default function ManagerList() {
   const openEditModal = (manager) => {
     setSelectedManager(manager);
     setFullName(manager.fullName ?? "");
-    setPhone(manager.phone ?? "");
+    setPhone(manager.phoneNumber ?? "");
     setShowEdit(true);
   };
 
   // update manager
   const handleUpdate = async () => {
     try {
-      await api.put(`/admin/managers/${selectedManager.managerId}`, {
+      await client.put(`/admin/managers/${selectedManager.id}`, {
         fullName: fullName,
         phoneNumber: phone, // MUST match backend DTO
       });
@@ -59,7 +59,7 @@ export default function ManagerList() {
       return;
 
     try {
-      await api.delete(`/admin/managers/${id}`);
+      await client.delete(`/admin/managers/${id}`);
       loadManagers();
       alert("Manager deleted successfully");
     } catch (err) {
@@ -97,11 +97,11 @@ export default function ManagerList() {
             </tr>
           ) : (
             managers.map((manager, index) => (
-              <tr key={manager.managerId}>
+              <tr key={manager.id}>
                 <td>{index + 1}</td>
                 <td>{manager.fullName ?? "-"}</td>
                 <td>{manager.email}</td>
-                <td>{manager.phone ?? "-"}</td>
+                <td>{manager.phoneNumber ?? "-"}</td>
                 <td>
                   <button
                     className="btn btn-sm btn-primary me-2"
@@ -111,7 +111,7 @@ export default function ManagerList() {
                   </button>
                   <button
                     className="btn btn-sm btn-danger"
-                    onClick={() => handleDelete(manager.managerId)}
+                    onClick={() => handleDelete(manager.id)}
                   >
                     Delete
                   </button>
