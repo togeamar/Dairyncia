@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dairyncia.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260131095258_AddMilkRateTable")]
+    partial class AddMilkRateTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,6 +359,119 @@ namespace Dairyncia.Migrations
                     b.ToTable("MilkRates");
                 });
 
+            modelBuilder.Entity("Dairyncia.Models.MilkRateCell", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Fat")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("MilkRateChartId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("Snf")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilkRateChartId");
+
+                    b.HasIndex("Fat", "Snf", "MilkRateChartId")
+                        .IsUnique();
+
+                    b.ToTable("MilkRateCells");
+                });
+
+            modelBuilder.Entity("Dairyncia.Models.MilkRateChart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("BaseFat")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("BaseRate")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("BaseSnf")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("ChartName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MilkType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MilkRateCharts");
+                });
+
+            modelBuilder.Entity("Dairyncia.Models.MilkRateFirstColumn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Fat")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("MilkRateChartId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilkRateChartId");
+
+                    b.ToTable("MilkRateFirstColumns");
+                });
+
+            modelBuilder.Entity("Dairyncia.Models.MilkRateFirstRow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MilkRateChartId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("Snf")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilkRateChartId");
+
+                    b.ToTable("MilkRateFirstRows");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -553,6 +669,39 @@ namespace Dairyncia.Migrations
                     b.Navigation("Manager");
                 });
 
+            modelBuilder.Entity("Dairyncia.Models.MilkRateCell", b =>
+                {
+                    b.HasOne("Dairyncia.Models.MilkRateChart", "MilkRateChart")
+                        .WithMany("RateCells")
+                        .HasForeignKey("MilkRateChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MilkRateChart");
+                });
+
+            modelBuilder.Entity("Dairyncia.Models.MilkRateFirstColumn", b =>
+                {
+                    b.HasOne("Dairyncia.Models.MilkRateChart", "MilkRateChart")
+                        .WithMany("FirstColumnFatRates")
+                        .HasForeignKey("MilkRateChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MilkRateChart");
+                });
+
+            modelBuilder.Entity("Dairyncia.Models.MilkRateFirstRow", b =>
+                {
+                    b.HasOne("Dairyncia.Models.MilkRateChart", "MilkRateChart")
+                        .WithMany("FirstRowSnfRates")
+                        .HasForeignKey("MilkRateChartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MilkRateChart");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -607,6 +756,15 @@ namespace Dairyncia.Migrations
             modelBuilder.Entity("Dairyncia.Models.Farmer", b =>
                 {
                     b.Navigation("MilkCollections");
+                });
+
+            modelBuilder.Entity("Dairyncia.Models.MilkRateChart", b =>
+                {
+                    b.Navigation("FirstColumnFatRates");
+
+                    b.Navigation("FirstRowSnfRates");
+
+                    b.Navigation("RateCells");
                 });
 #pragma warning restore 612, 618
         }
