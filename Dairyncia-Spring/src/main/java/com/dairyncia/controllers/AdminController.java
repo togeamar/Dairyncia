@@ -1,24 +1,34 @@
 package com.dairyncia.controllers;
 
-import com.dairyncia.dto.ApiResponse;
-import com.dairyncia.dto.AssignRoleDto;
-import com.dairyncia.dto.PendingUserDto;
-import com.dairyncia.entities.*;
-import com.dairyncia.custom_exception.BadRequestException;
-import com.dairyncia.custom_exception.ResourceNotFoundException;
-import com.dairyncia.repository.*;
-import com.dairyncia.service.AdminService;
-
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.dairyncia.dto.AddressDTO;
+import com.dairyncia.dto.ApiResponse;
+import com.dairyncia.dto.AssignRoleDto;
+import com.dairyncia.dto.BankDetailsDTO;
+import com.dairyncia.dto.FarmerProfileUpdateDTO;
+import com.dairyncia.dto.FarmerResponseDTO;
+import com.dairyncia.dto.ManagerResponseDTO;
+import com.dairyncia.dto.ManagerUpdateDTO;
+import com.dairyncia.repository.FarmerRepository;
+import com.dairyncia.repository.RoleRepository;
+import com.dairyncia.repository.UserRepository;
+import com.dairyncia.service.AdminService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -41,6 +51,79 @@ public class AdminController {
         
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+    
+    // get all managers
+    @GetMapping("/managers")
+    public ResponseEntity<List<ManagerResponseDTO>> getManagers(){
+    	return ResponseEntity.ok(adminService.getAllManagers());
+    }
+    
+    // update manager
+    @PutMapping("/managers/{managerId}")
+    public ResponseEntity<ApiResponse> updateManager(
+    	@PathVariable Long managerId,
+    	@RequestBody ManagerUpdateDTO dto){
+    	
+    	adminService.updateManager(managerId,dto);
+    	
+    	
+    	return ResponseEntity.ok(new ApiResponse("Manager Updated Successfully","SUCCESS")); 
+    }
+    
+    // delete manager by id
+    @DeleteMapping("/managers/{managerId}")
+    public ResponseEntity<ApiResponse> deleteManager(@PathVariable Long managerId){
+    	adminService.deleteManager(managerId);
+    	
+    	return ResponseEntity.ok(new ApiResponse("Manager Deleted Successfully","SUCCESS")); 
+    }
+    
+    @GetMapping("/farmers")
+    public List<FarmerResponseDTO> getAllFarmers() {
+        return adminService.getAllFarmers();
+    }
+    
+   
+
+ // Get Farmer by ID
+    @GetMapping("/farmers/{farmerId}")
+    public FarmerResponseDTO getFarmer(@PathVariable Long farmerId) {
+        return adminService.getFarmerById(farmerId);
+    }
+
+    // Update Farmer profile
+    @PutMapping("/farmers/{farmerId}")
+    public ApiResponse updateFarmer(
+            @PathVariable Long farmerId,
+            @RequestBody FarmerProfileUpdateDTO dto) {
+        return adminService.updateFarmer(farmerId, dto);
+    }
+    
+    // editing the addresses
+    @PostMapping("/farmers/{userId}/address")
+    public ApiResponse saveOrupdateAddress(
+    		@PathVariable Long userId, @RequestBody AddressDTO dto) {
+    	return adminService.saveOrUpdateFarmerAddress(userId,dto);
+    }
+    
+    // editing the bank-details
+    @PostMapping("/farmers/{userId}/bank")
+    public ApiResponse saveOrupdateBankDetails(
+    		@PathVariable Long userId, @RequestBody BankDetailsDTO dto) {
+    	return adminService.saveOrUpdateBankDetails(userId,dto);
+    }
+    
+    // delete farmer by id
+    @DeleteMapping("/farmers/{userId}")
+    public ApiResponse deleteFarmer(@PathVariable Long userId) {
+        return adminService.deleteFarmerByUserId(userId);
+    }
+    
+
+    
+     
+
+
 
     // ================= PENDING USERS =================
     /*@GetMapping("/pending-users")

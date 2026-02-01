@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FarmerListDTO {
 
-    private Long farmerID;
+    private Long farmerId;
     private String email;
     private String fullName;
     private LocalDateTime createdAt;
 
     public FarmerListDTO(Farmer farmer) {
-        this.farmerID = farmer.getId();
+        this.farmerId = farmer.getId();
         this.createdAt = farmer.getCreatedAt();
 
         if (farmer.getUser() != null) {

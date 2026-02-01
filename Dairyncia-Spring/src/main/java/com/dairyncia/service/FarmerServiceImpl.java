@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dairyncia.custom_exception.ResourceNotFoundException;
 import com.dairyncia.dto.FarmerDashboardDto;
+import com.dairyncia.dto.FarmerListDTO;
 import com.dairyncia.dto.FarmerMilkDto;
 import com.dairyncia.entities.Farmer;
 import com.dairyncia.entities.MilkCollection;
@@ -101,4 +102,13 @@ public class FarmerServiceImpl implements FarmerService {
 
         return dashboard;
     }
+
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<FarmerListDTO> getAllFarmers() {
+//        List<Farmer> farmers = farmerRepository.findAllFarmers();
+//        return farmers.stream()
+//                .map(FarmerListDTO::new)
+//                .toList();
+//    }
 }

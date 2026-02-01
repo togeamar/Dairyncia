@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../services/api";
+import client from "../../../services/client";
 
 export default function FarmerList() {
   const [farmers, setFarmers] = useState([]);
@@ -35,7 +35,7 @@ export default function FarmerList() {
 
   const loadFarmers = async () => {
     try {
-      const res = await api.get("/admin/farmers");
+      const res = await client.get("/admin/farmers");
       setFarmers(res.data);
     } catch {
       alert("Failed to load farmers");
@@ -47,7 +47,7 @@ export default function FarmerList() {
   // ================= OPEN MODAL =================
   const openModal = async (farmerId, formType) => {
     try {
-      const res = await api.get(`/admin/farmers/${farmerId}`);
+      const res = await client.get(`/admin/farmers/${farmerId}`);
       const f = res.data;
 
       setSelectedFarmer(f);
@@ -96,8 +96,8 @@ export default function FarmerList() {
   // ================= SAVE PROFILE =================
   const saveProfile = async () => {
     try {
-      await api.put(
-        `/admin/farmers/${selectedFarmer.farmerId}`,
+      await client.put(
+        `/admin/farmers/${selectedFarmer.id}`,
         profile
       );
       alert("Profile updated successfully");
@@ -111,8 +111,8 @@ export default function FarmerList() {
   // ================= SAVE ADDRESS =================
   const saveAddress = async () => {
     try {
-      await api.post(
-        `/admin/farmers/${selectedFarmer.farmerId}/address`,
+      await client.post(
+        `/admin/farmers/${selectedFarmer.id}/address`,
         address
       );
       alert("Address saved successfully");
@@ -125,8 +125,8 @@ export default function FarmerList() {
   // ================= SAVE BANK =================
   const saveBank = async () => {
     try {
-      await api.post(
-        `/admin/farmers/${selectedFarmer.farmerId}/bank`,
+      await client.post(
+        `/admin/farmers/${selectedFarmer.id}/bank`,
         bank
       );
       alert("Bank details saved successfully");
@@ -137,11 +137,11 @@ export default function FarmerList() {
   };
 
   // ================= DELETE FARMER =================
-  const deleteFarmer = async (farmerId) => {
+  const deleteFarmer = async (id) => {
     if (!window.confirm("Are you sure you want to delete this farmer?")) return;
 
     try {
-      await api.delete(`/admin/farmers/${farmerId}`);
+      await client.delete(`/admin/farmers/${id}`);
       alert("Farmer deleted successfully");
       loadFarmers();
     } catch (err) {
@@ -180,36 +180,36 @@ export default function FarmerList() {
             </tr>
           ) : (
             farmers.map((f) => (
-              <tr key={f.farmerId}>
-                <td>{f.farmerId}</td>
+              <tr key={f.id}>
+                <td>{f.id}</td>
                 <td>{f.fullName}</td>
                 <td>{f.email}</td>
                 <td>{new Date(f.createdAt).toLocaleDateString()}</td>
                 <td>
                   <button
                     className="btn btn-sm btn-info me-1"
-                    onClick={() => openModal(f.farmerId, "profile")}
+                    onClick={() => openModal(f.id, "profile")}
                   >
                     Edit Profile
                   </button>
 
                   <button
                     className="btn btn-sm btn-warning me-1"
-                    onClick={() => openModal(f.farmerId, "address")}
+                    onClick={() => openModal(f.id, "address")}
                   >
                     Address
                   </button>
 
                   <button
                     className="btn btn-sm btn-primary me-1"
-                    onClick={() => openModal(f.farmerId, "bank")}
+                    onClick={() => openModal(f.id, "bank")}
                   >
                     Bank
                   </button>
 
                   <button
                     className="btn btn-sm btn-danger"
-                    onClick={() => deleteFarmer(f.farmerId)}
+                    onClick={() => deleteFarmer(f.id)}
                   >
                     Delete
                   </button>
