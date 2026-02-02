@@ -5,6 +5,11 @@ import "./Farmer.css";
 export default function Farmer() {
   const [profile, setProfile] = useState({});
   const [records, setRecords] = useState([]);
+  const [summary, setSummary] = useState({
+    totalIncome: 0,
+    paidAmount: 0,
+    unpaidAmount: 0
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +28,25 @@ export default function Farmer() {
         const recordsRes = await api.get("/farmer/milk-collections", {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setRecords(recordsRes.data || []);
+
+        const data = recordsRes.data || [];
+        setRecords(data);
+
+        // ---------- INCOME CALCULATION ----------
+        const totalIncome = data
+          .filter(r => r.paymentStatus !== "Cancelled")
+          .reduce((sum, r) => sum + r.totalAmount, 0);
+
+        const paidAmount = data
+          .filter(r => r.paymentStatus === "Paid")
+          .reduce((sum, r) => sum + r.totalAmount, 0);
+
+        const unpaidAmount = data
+          .filter(r => r.paymentStatus === "Pending")
+          .reduce((sum, r) => sum + r.totalAmount, 0);
+
+        setSummary({ totalIncome, paidAmount, unpaidAmount });
+
       } catch (err) {
         console.error("Farmer Dashboard API error:", err);
       } finally {
@@ -45,22 +68,60 @@ export default function Farmer() {
   return (
     <div className="farmer-page">
 
-      {/* PROFILE CARD */}
-      <div className="profile-card">
-        <div className="profile-left">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/219/219983.png"
-            alt="Farmer"
-          />
-        </div>
-        <div className="profile-right">
-          <h2>{profile.fullName}</h2>
-          <p><strong>Email:</strong> {profile.email}</p>
-          <p><strong>User ID:</strong> {profile.userId}</p>
-          <p><strong>Farmer ID:</strong> {profile.farmerId || "N/A"}</p>
-          <p><strong>Role:</strong> Farmer</p>
-          <p><strong>Joined:</strong> {profile.createdAt ? profile.createdAt.slice(0,10) : "N/A"}</p>
-        </div>
+      {/* PROFILE + ADDRESS */}
+<div className="profile-address-wrapper">
+
+  {/* LEFT : PERSONAL DETAILS */}
+  <div className="profile-card">
+    <div className="profile-left">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/219/219983.png"
+        alt="Farmer"
+      />
+    </div>
+    <div className="profile-right">
+      <h1>{profile.fullName}</h1>
+      <h5><strong>Email:</strong> {profile.email}</h5>
+      <h5><strong>Phone:</strong> {profile.phoneNumber || "N/A"}</h5>
+    </div>
+  </div>
+
+  {/* RIGHT : ADDRESS */}
+  <div className="address-card">
+    <h3>🏠 Address</h3>
+    <p><strong>Village:</strong> {profile.village}</p>
+    <p><strong>City:</strong> {profile.city}</p>
+    <p><strong>State:</strong> {profile.state}</p>
+    <p><strong>Pincode:</strong> {profile.pincode}</p>
+  </div>
+
+</div>
+
+
+      {/* INCOME SUMMARY */}
+      <div className="income-summary">
+        <h3>💰 Income Summary (This Month)</h3>
+
+        <table className="summary-table">
+          <tbody>
+            <tr>
+              <td><strong>Total Income</strong></td>
+              <td>₹ {summary.totalIncome.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td><strong>Paid Amount</strong></td>
+              <td style={{ color: "green" }}>
+                ₹ {summary.paidAmount.toFixed(2)}
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Unpaid Amount</strong></td>
+              <td style={{ color: "red" }}>
+                ₹ {summary.unpaidAmount.toFixed(2)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       {/* MILK COLLECTIONS TABLE */}
@@ -77,13 +138,14 @@ export default function Farmer() {
               <th>SNF</th>
               <th>Rate/L (₹)</th>
               <th>Total (₹)</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {records.length === 0 ? (
               <tr>
-                <td colSpan="9" className="no-data">No milk records found</td>
+                <td colSpan="8" className="no-data">
+                  No milk records found
+                </td>
               </tr>
             ) : (
               records.map((r) => (
@@ -96,7 +158,6 @@ export default function Farmer() {
                   <td>{r.snf}</td>
                   <td>{r.ratePerLiter}</td>
                   <td>{r.totalAmount}</td>
-                  <td>{r.paymentStatus}</td>
                 </tr>
               ))
             )}
