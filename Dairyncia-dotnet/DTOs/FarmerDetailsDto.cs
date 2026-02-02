@@ -2,7 +2,7 @@
 {
     public class FarmerDetailsDto
     {
-        public int FarmerId { get; set; }
+        public int Id { get; set; }
         public string UserId { get; set; }
 
         public string FullName { get; set; }

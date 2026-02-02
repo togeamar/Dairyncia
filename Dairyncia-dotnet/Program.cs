@@ -132,16 +132,16 @@ var app = builder.Build();
 // =====================================================
 // SEED ROLES + ADMIN USER (CRITICAL)
 // =====================================================
-//using (var scope = app.Services.CreateScope())
-//{
- //   var services = scope.ServiceProvider;
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
-   // var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    //var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-    //await SeedData.SeedRoles(roleManager);
-    //await SeedData.SeedAdminUser(userManager);
-//}
+    await SeedData.SeedRoles(roleManager);
+    await SeedData.SeedAdminUser(userManager);
+}
 
 // =====================================================
 // MIDDLEWARE PIPELINE
