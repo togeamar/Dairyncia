@@ -1,31 +1,14 @@
 import { useState, useEffect } from "react";
 import { Navbar, Container, Nav, Offcanvas, Button } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import "./NavigationBar.css"; // Make sure to import the CSS file
+import "./NavigationBar.css";
 
 export function NavigationBar() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const pages=["/login","/signup"];
-
-  
-  useEffect(() => {
-  if (location.pathname !== "/") {
-    setIsScrolled(true);
-    return;
-  }
-
-  
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 20);
-  };
-
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, [location.pathname]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -48,7 +31,7 @@ export function NavigationBar() {
     <Navbar
       expand="lg"
       fixed="top"
-      className={`dairyncia-navbar ${isScrolled ? "scrolled" : ""}`}
+      className="dairyncia-navbar"
     >
       <Container>
         <Navbar.Brand as={Link} to="/" className="brand-logo">
@@ -83,8 +66,6 @@ export function NavigationBar() {
                 <Nav.Link as={Link} to="/admin-dashboard" className="custom-nav-link">Dashboard</Nav.Link>
                )} 
               
-              <Nav.Link as={Link} to="/services" className="custom-nav-link">Services</Nav.Link>
-              <Nav.Link as={Link} to="/products" className="custom-nav-link">Products</Nav.Link> 
               <Nav.Link as={Link} to="/about" className="custom-nav-link">About</Nav.Link>
               <Nav.Link as={Link} to="/contact" className="custom-nav-link">Contact</Nav.Link>
             </Nav>

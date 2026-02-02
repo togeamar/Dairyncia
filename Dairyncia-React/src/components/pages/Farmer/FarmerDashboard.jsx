@@ -13,7 +13,7 @@ const FarmerDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // SAFE BACKEND CALL (will not break UI if API/data not available)
+  
     fetch("http://localhost:5225/api/farmer/dashboard/0")
       .then((res) => {
         if (!res.ok) {
@@ -32,7 +32,7 @@ const FarmerDashboard = () => {
         setLoading(false);
       })
       .catch(() => {
-        // IMPORTANT: No error UI, show empty dashboard safely
+
         setLoading(false);
       });
   }, []);
@@ -48,14 +48,14 @@ const FarmerDashboard = () => {
       {/* PROFILE + BANK */}
       <div className="fd-top-grid">
         <div className="fd-card slide-up delay-1">
-          <h3>👨‍🌾 Profile</h3>
+          <h3> Profile</h3>
           <p><strong>Name:</strong> {dashboardData.fullName}</p>
           <p><strong>Email:</strong> {dashboardData.email}</p>
           <p><strong>Phone:</strong> {dashboardData.phone}</p>
         </div>
 
         <div className="fd-card slide-up delay-2">
-          <h3>🏦 Bank Details</h3>
+          <h3> Bank Details</h3>
           {dashboardData.bankDetails ? (
             <>
               <p><strong>Bank:</strong> {dashboardData.bankDetails.bankName}</p>
