@@ -2,7 +2,7 @@
 {
     public class BankDetailsDto
     {
-        public int? BankDetailsId { get; set; }
+        public int? Id { get; set; }
         public string BankName { get; set; }
         public string AccountNumber { get; set; }
         public string AccountHolderName { get; set; }

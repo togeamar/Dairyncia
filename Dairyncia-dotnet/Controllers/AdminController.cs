@@ -132,7 +132,7 @@ namespace Dairyncia.Controllers
             .OrderByDescending(f => f.CreatedAt)
             .Select(f => new FarmerListDTO
             {
-                FarmerId = f.Id,
+                Id = f.Id,
                 Email = f.User.Email,
                 FullName = f.User.FullName,
                 CreatedAt = f.CreatedAt
@@ -158,14 +158,14 @@ namespace Dairyncia.Controllers
 
             return Ok(new FarmerDetailsDto
             {
-                FarmerId = farmer.Id,
+                Id = farmer.Id,
                 UserId = farmer.UserId,
                 FullName = farmer.User.FullName,
                 Email = farmer.User.Email,
                 Phone = farmer.User.PhoneNumber,
                 Address = farmer.Address == null ? null : new AddressDto
                 {
-                    AddressId = farmer.Address.Id,
+                    Id = farmer.Address.Id,
                     Village = farmer.Address.Village,
                     City = farmer.Address.City,
                     State = farmer.Address.State,
@@ -173,7 +173,7 @@ namespace Dairyncia.Controllers
                 },
                 BankDetails = bank == null ? null : new BankDetailsDto
                 {
-                    BankDetailsId = bank.Id,
+                    Id = bank.Id,
                     BankName = bank.BankName,
                     AccountNumber = bank.AccountNumber,
                     AccountHolderName = bank.AccountHolderName,
@@ -307,10 +307,10 @@ namespace Dairyncia.Controllers
             var result = managers
                 .Select(u => new ManagerListDto
                 {
-                    ManagerId = u.Id,
+                    Id = u.Id,
                     Email = u.Email,
                     FullName = u.FullName,
-                    Phone = u.PhoneNumber
+                    PhoneNumber = u.PhoneNumber
                 })
                 .ToList();
 

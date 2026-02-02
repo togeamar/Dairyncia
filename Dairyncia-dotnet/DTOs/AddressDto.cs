@@ -2,7 +2,7 @@
 {
     public class AddressDto
     {
-        public int? AddressId { get; set; }
+        public int? Id { get; set; }
         public string Village { get; set; }
         public string City { get; set; }
         public string State { get; set; }
