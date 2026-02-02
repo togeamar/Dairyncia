@@ -45,15 +45,22 @@ public class AuthController : ControllerBase
         Console.WriteLine("➡️ API HIT: /api/auth/login");
         var user = await _userManager.FindByEmailAsync(dto.Email);
         Console.WriteLine(dto.Email+"ghj"+user);
-        if (user == null)
-            return Unauthorized();
+        if (user == null){
+            
+            return Unauthorized("user not found");
+        }
 
-        if (!await _userManager.CheckPasswordAsync(user, dto.Password))
-            return Unauthorized();
+        if (!await _userManager.CheckPasswordAsync(user, dto.Password)){
+            
+            return Unauthorized("incorrect password");
+        
+        }
 
         var roles = await _userManager.GetRolesAsync(user);
-        if (!roles.Any())
+        if (!roles.Any()){
+            
             return Unauthorized("Role not assigned");
+        }
 
         var claims = new List<Claim>
         {

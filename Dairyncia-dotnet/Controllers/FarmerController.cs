@@ -1,6 +1,6 @@
 ﻿using Dairyncia.DTOs;
 using Dairyncia.Models;
-using Dairyncia.Enums; // ✅ Import enums
+using Dairyncia.Enums; 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,24 +36,28 @@ namespace Dairyncia.Controllers
                 return NotFound("User not found");
 
             var farmer = await _context.Farmers
+                .Include(f => f.Address)   
                 .AsNoTracking()
                 .FirstOrDefaultAsync(f => f.UserId == userId);
 
             if (farmer == null)
                 return NotFound("Farmer record not found");
 
-            var response = new FarmerProfileDto
+            var response = new FarmerBasicProfileDto
             {
-                UserId = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
-                FarmerId = farmer.Id,
-                AddressId = farmer.AddressId,
-                CreatedAt = farmer.CreatedAt
+                PhoneNumber = user.PhoneNumber,
+
+                Village = farmer.Address?.Village,
+                City = farmer.Address?.City,
+                State = farmer.Address?.State,
+                Pincode = farmer.Address?.Pincode
             };
 
             return Ok(response);
         }
+
 
         // GET: api/farmer/milk-collections
         [HttpGet("milk-collections")]
@@ -63,6 +67,8 @@ namespace Dairyncia.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User not authenticated");
 
+
+
             var farmer = await _context.Farmers
                 .AsNoTracking()
                 .FirstOrDefaultAsync(f => f.UserId == userId);
@@ -70,21 +76,30 @@ namespace Dairyncia.Controllers
             if (farmer == null)
                 return NotFound("Farmer record not found");
 
+            var now = DateTime.Now;
+            var startOfMonth = new DateTime(now.Year, now.Month, 1);
+            var startOfNextMonth = startOfMonth.AddMonths(1);
+
             var collections = await _context.MilkCollections
                 .AsNoTracking()
-                .Where(mc => mc.FarmerId == farmer.Id)
-                .OrderByDescending(mc => mc.CreatedAt)
+                .Where(
+                mc => mc.FarmerId == farmer.Id &&
+                      mc.CreatedAt >= startOfMonth &&
+                      mc.CreatedAt < startOfNextMonth
+
+                )
+                .OrderBy(mc => mc.CreatedAt)
                 .Select(mc => new MilkCollectionDto
                 {
                     Id = mc.Id,
-                    MilkType = ((MilkType)mc.MilkType).ToString(),        // ✅ Use enum
-                    MilkShift = ((MilkShift)mc.MilkShift).ToString(),     // ✅ Use enum
+                    MilkType = ((MilkType)mc.MilkType).ToString(),      
+                    MilkShift = ((MilkShift)mc.MilkShift).ToString(),     
                     Quantity = mc.Quantity,
                     FatPercentage = mc.FatPercentage,
                     SNF = mc.SNF,
                     RatePerLiter = mc.RatePerLiter,
                     TotalAmount = mc.TotalAmount,
-                    PaymentStatus = ((PaymentStatus)mc.PaymentStatus).ToString(), // ✅ Use enum
+                    PaymentStatus = ((PaymentStatus)mc.PaymentStatus).ToString(), 
                     CreatedAt = mc.CreatedAt
                 })
                 .ToListAsync();

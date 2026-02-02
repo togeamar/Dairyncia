@@ -12,6 +12,7 @@ import lombok.Setter;
 public class ApiResponse {
 	private String message;
 	private String status;
+	
 	private LocalDateTime timestamp;
 	
 	public ApiResponse(String message,String status) {

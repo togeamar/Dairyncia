@@ -6,6 +6,7 @@ import ManagerList from "./admin/ManagerList";
 import MilkCollectionList from "./admin/MilkCollectionList";
 
 import "./Admin.css";
+import Rates from "./admin/Rates";
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState("pending");
@@ -52,6 +53,14 @@ export default function Admin() {
             Milk Collections
           </button>
         </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab==="Rates"?"active":""}`}
+            onClick={()=>setActiveTab("Rates")}
+            >
+              Rate Chart
+            </button>
+        </li>
       </ul>
 
       {/* Tab Content */}
@@ -60,6 +69,7 @@ export default function Admin() {
         {activeTab === "farmers" && <FarmerList />}
         {activeTab === "managers" && <ManagerList />}
         {activeTab === "milk" && <MilkCollectionList />}
+        {activeTab === "Rates" && <Rates/>}
       </div>
     </div>
   );
