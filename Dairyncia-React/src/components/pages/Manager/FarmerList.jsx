@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import client from "../../../services/client";
+import api from "../../../services/api";
 
 export default function FarmerList() {
   const [farmers, setFarmers] = useState([]);
@@ -28,14 +28,15 @@ export default function FarmerList() {
     ifsc: "",
   });
 
-  //  LOAD FARMERS 
+  // ================= LOAD FARMERS =================
   useEffect(() => {
     loadFarmers();
   }, []);
 
   const loadFarmers = async () => {
     try {
-      const res = await client.get("/admin/farmers");
+      const managerId = localStorage.getItem("id");
+      const res = await api.get(`/manager/get-farmer-list/${managerId}`);
       setFarmers(res.data);
     } catch {
       alert("Failed to load farmers");
@@ -44,10 +45,10 @@ export default function FarmerList() {
     }
   };
 
-  //  OPEN MODAL 
+  // ================= OPEN MODAL =================
   const openModal = async (farmerId, formType) => {
     try {
-      const res = await client.get(`/admin/farmers/${farmerId}`);
+      const res = await api.get(`/admin/farmers/${farmerId}`);
       const f = res.data;
 
       setSelectedFarmer(f);
@@ -93,11 +94,11 @@ export default function FarmerList() {
     setSelectedFarmer(null);
   };
 
-  //  SAVE PROFILE 
+  // ================= SAVE PROFILE =================
   const saveProfile = async () => {
     try {
-      await client.put(
-        `/admin/farmers/${selectedFarmer.id}`,
+      await api.put(
+        `/admin/farmers/${selectedFarmer.farmerId}`,
         profile
       );
       alert("Profile updated successfully");
@@ -108,11 +109,11 @@ export default function FarmerList() {
     }
   };
 
-  //  SAVE ADDRESS 
+  // ================= SAVE ADDRESS =================
   const saveAddress = async () => {
     try {
-      await client.post(
-        `/admin/farmers/${selectedFarmer.id}/address`,
+      await api.post(
+        `/admin/farmers/${selectedFarmer.farmerId}/address`,
         address
       );
       alert("Address saved successfully");
@@ -125,8 +126,8 @@ export default function FarmerList() {
   // ================= SAVE BANK =================
   const saveBank = async () => {
     try {
-      await client.post(
-        `/admin/farmers/${selectedFarmer.id}/bank`,
+      await api.post(
+        `/admin/farmers/${selectedFarmer.farmerId}/bank`,
         bank
       );
       alert("Bank details saved successfully");
@@ -136,12 +137,12 @@ export default function FarmerList() {
     }
   };
 
-  //  DELETE FARMER 
+  // ================= DELETE FARMER =================
   const deleteFarmer = async (farmerId) => {
     if (!window.confirm("Are you sure you want to delete this farmer?")) return;
 
     try {
-      await client.delete(`/admin/farmers/${id}`);
+      await api.delete(`/admin/farmers/${farmerId}`);
       alert("Farmer deleted successfully");
       loadFarmers();
     } catch (err) {
@@ -160,14 +161,13 @@ export default function FarmerList() {
     <div style={{ paddingTop: "100px", padding: "30px" }}>
       <h2>Farmer Management</h2>
 
-      {/*  FARMER TABLE  */}
+      {/* ================= FARMER TABLE ================= */}
       <table className="table table-bordered table-striped mt-3">
         <thead className="table-dark">
           <tr>
             <th>ID</th>
             <th>Full Name</th>
             <th>Email</th>
-            <th>Manager</th>
             <th>Created</th>
             <th width="350">Actions</th>
           </tr>
@@ -181,37 +181,36 @@ export default function FarmerList() {
             </tr>
           ) : (
             farmers.map((f) => (
-              <tr key={f.id}>
-                <td>{f.id}</td>
+              <tr key={f.farmerId}>
+                <td>{f.farmerId}</td>
                 <td>{f.fullName}</td>
                 <td>{f.email}</td>
-                <td>{f.managerName}</td>
                 <td>{new Date(f.createdAt).toLocaleDateString()}</td>
                 <td>
                   <button
                     className="btn btn-sm btn-info me-1"
-                    onClick={() => openModal(f.id, "profile")}
+                    onClick={() => openModal(f.farmerId, "profile")}
                   >
                     Edit Profile
                   </button>
 
                   <button
                     className="btn btn-sm btn-warning me-1"
-                    onClick={() => openModal(f.id, "address")}
+                    onClick={() => openModal(f.farmerId, "address")}
                   >
                     Address
                   </button>
 
                   <button
                     className="btn btn-sm btn-primary me-1"
-                    onClick={() => openModal(f.id, "bank")}
+                    onClick={() => openModal(f.farmerId, "bank")}
                   >
                     Bank
                   </button>
 
                   <button
                     className="btn btn-sm btn-danger"
-                    onClick={() => deleteFarmer(f.id)}
+                    onClick={() => deleteFarmer(f.farmerId)}
                   >
                     Delete
                   </button>
@@ -222,7 +221,7 @@ export default function FarmerList() {
         </tbody>
       </table>
 
-      {/* MODAL */}
+      {/* ================= MODAL ================= */}
       {showModal && (
         <>
           <div className="modal fade show d-block">

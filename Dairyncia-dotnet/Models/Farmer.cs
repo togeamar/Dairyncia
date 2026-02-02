@@ -15,6 +15,9 @@ namespace Dairyncia.Models
         [ForeignKey(nameof(AddressId))]
         public Address? Address { get; set; }
 
+        [ForeignKey(nameof(UserId))]
+        public string ManagerId { get; set; }
+
         public ICollection<MilkCollection>? MilkCollections { get; set; }
     }
 }

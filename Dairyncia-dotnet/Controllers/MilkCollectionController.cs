@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+
+
+
 namespace Dairyncia.Controllers
 {
     [ApiController]
@@ -103,19 +106,26 @@ namespace Dairyncia.Controllers
         }
 
         // get all entries
-        [HttpGet("all")]
+        [HttpGet("all/{managerId}")]
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> GetAllMilkCollections()
+        public async Task<IActionResult> GetAllMilkCollections(string managerId)
         {
+            var milkCollection = _context.MilkCollections;
+            var today = DateTime.Today;
+            var tomorrow = today.AddDays(1);
+
             var data = await _context.MilkCollections
                 .Include(m => m.Farmer).ThenInclude(f => f.User)
-                .Include(m => m.Manager)
+                .Include(m => m.Manager).Where(c =>
+                    c.ManagerId == managerId &&
+                    c.CreatedAt >= today &&
+                    c.CreatedAt < tomorrow)
                 .OrderByDescending(m => m.CreatedAt)
                 .Select(m => new
                 {
                     m.Id,
-                    Farmer = m.Farmer.User.Email,
-                    Manager = m.Manager.Email,
+                    Farmer = m.Farmer.User.FullName,
+                    Manager = m.Manager.FullName,
                     m.MilkType,
                     m.MilkShift,
                     m.Quantity,
@@ -131,17 +141,20 @@ namespace Dairyncia.Controllers
             return Ok(data);
         }
 
-        [HttpGet("todays")]
+        [HttpGet("todays/{managerId}")]
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> GetTodaysMilkCollections()
+        public async Task<IActionResult> GetTodaysMilkCollections(string managerId)
         {
             var today = DateTime.Today;
             var tomorrow = today.AddDays(1);
 
+
             var data = await _context.MilkCollections
                 .Include(m => m.Farmer).ThenInclude(f => f.User)
                 .Include(m => m.Manager)
-                .Where(c => c.CreatedAt >= today &&
+                .Where(c => 
+                    c.ManagerId == managerId &&
+                    c.CreatedAt >= today &&
                     c.CreatedAt < tomorrow)
                 .OrderByDescending(m => m.CreatedAt)
                 .Select(m => new
@@ -179,24 +192,34 @@ namespace Dairyncia.Controllers
             return Ok(milk);
         }
 
-         
+
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateMilkCollection(
-            int id,
-            [FromBody] UpdateMilkCollectionDto dto)
+        public async Task<IActionResult> UpdateMilkCollection(int id,[FromBody] UpdateMilkCollectionDto dto)
         {
-            var milk = await _context.MilkCollections.FindAsync(id);
+            var managerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var milk = await _context.MilkCollections
+                .FirstOrDefaultAsync(x => x.Id == id && x.ManagerId == managerId);
+
             if (milk == null)
-                return NotFound("Milk collection not found");
+                return Forbid("You cannot edit this record");
 
+            // Round Input
+            var fat = Math.Round(dto.FatPercentage, 2);
+            var snf = Math.Round(dto.SNF, 2);
+
+            // Get Nearest Rate
             var ratePerLiter = await _milkRateHelper
-                .GetRatePerLiter(dto.FatPercentage, dto.SNF, milk.MilkType);
+                .GetRatePerLiter(fat, snf, milk.MilkType);
 
+            // ⭐ REMOVE RATE == 0 CHECK (IMPORTANT)
+
+            // Update Values
             milk.Quantity = dto.Quantity;
-            milk.FatPercentage = dto.FatPercentage;
-            milk.SNF = dto.SNF;
-            milk.RatePerLiter = ratePerLiter.Data.Rate;
-            milk.TotalAmount = ratePerLiter.Data.Rate * dto.Quantity;
+            milk.FatPercentage = fat;
+            milk.SNF = snf;
+            milk.RatePerLiter = ratePerLiter;
+            milk.TotalAmount = Math.Round(ratePerLiter * dto.Quantity, 2);
 
             await _context.SaveChangesAsync();
 
@@ -204,11 +227,11 @@ namespace Dairyncia.Controllers
             {
                 message = "Milk collection updated successfully",
                 milk.Id,
+                milk.RatePerLiter,
                 milk.TotalAmount
             });
         }
 
-           
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteMilkCollection(int id)
         {
