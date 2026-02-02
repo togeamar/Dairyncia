@@ -23,7 +23,7 @@ namespace Dairyncia.Controllers
         } 
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadMilkRates([FromForm] IFormFile file,[FromQuery] MilkType milktype)
+        public async Task<IActionResult> UploadMilkRates(IFormFile file,[FromQuery] MilkType milktype)
         {
             if(file==null || file.Length == 0)
             {

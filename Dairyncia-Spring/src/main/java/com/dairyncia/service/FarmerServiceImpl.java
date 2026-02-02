@@ -39,13 +39,13 @@ public class FarmerServiceImpl implements FarmerService {
 
         FarmerDashboardDto dashboard = new FarmerDashboardDto();
 
-        // ================= BASIC INFO =================
+    
         dashboard.setFarmerId(farmer.getId());
         dashboard.setFullName(user.getFullName());
         dashboard.setEmail(user.getEmail());
         dashboard.setPhone(user.getPhoneNumber());
 
-        // ================= BANK DETAILS =================
+      
         bankDetailsRepository.findByUserId(user.getId()).ifPresent(bank -> {
             dashboard.setBankName(bank.getBankName());
             dashboard.setAccountNumber(bank.getAccountNumber());
@@ -53,9 +53,9 @@ public class FarmerServiceImpl implements FarmerService {
             dashboard.setAccountHolderName(bank.getAccountHolderName());
         });
 
-        // ✅ FETCH JOIN METHOD (VERY IMPORTANT)
+  
         List<MilkCollection> collections =
-                milkCollectionRepository.findByFarmerIdWithManager(farmer.getId());
+                milkCollectionRepository.findByFarmerId(farmer.getId());
 
         BigDecimal totalPaid = BigDecimal.ZERO;
         BigDecimal totalPending = BigDecimal.ZERO;
@@ -86,7 +86,7 @@ public class FarmerServiceImpl implements FarmerService {
                 );
             }
 
-            // ================= SUMMARY =================
+    
             if (mc.getPaymentStatus() == PaymentStatus.PAID) {
                 totalPaid = totalPaid.add(mc.getTotalAmount());
             } else {
