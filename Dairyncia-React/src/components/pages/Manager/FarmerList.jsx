@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../services/api";
+import client from "../../../services/client";
 
 export default function FarmerList() {
   const [farmers, setFarmers] = useState([]);
@@ -36,7 +36,7 @@ export default function FarmerList() {
   const loadFarmers = async () => {
     try {
       const managerId = localStorage.getItem("id");
-      const res = await api.get(`/manager/get-farmer-list/${managerId}`);
+      const res = await client.get(`/manager/get-farmer-list/${managerId}`);
       setFarmers(res.data);
     } catch {
       alert("Failed to load farmers");
@@ -48,7 +48,7 @@ export default function FarmerList() {
   // ================= OPEN MODAL =================
   const openModal = async (farmerId, formType) => {
     try {
-      const res = await api.get(`/admin/farmers/${farmerId}`);
+      const res = await client.get(`/admin/farmers/${farmerId}`);
       const f = res.data;
 
       setSelectedFarmer(f);
@@ -97,7 +97,7 @@ export default function FarmerList() {
   // ================= SAVE PROFILE =================
   const saveProfile = async () => {
     try {
-      await api.put(
+      await client.put(
         `/admin/farmers/${selectedFarmer.farmerId}`,
         profile
       );
@@ -112,7 +112,7 @@ export default function FarmerList() {
   // ================= SAVE ADDRESS =================
   const saveAddress = async () => {
     try {
-      await api.post(
+      await client.post(
         `/admin/farmers/${selectedFarmer.farmerId}/address`,
         address
       );
@@ -126,7 +126,7 @@ export default function FarmerList() {
   // ================= SAVE BANK =================
   const saveBank = async () => {
     try {
-      await api.post(
+      await client.post(
         `/admin/farmers/${selectedFarmer.farmerId}/bank`,
         bank
       );
@@ -142,7 +142,7 @@ export default function FarmerList() {
     if (!window.confirm("Are you sure you want to delete this farmer?")) return;
 
     try {
-      await api.delete(`/admin/farmers/${farmerId}`);
+      await client.delete(`/admin/farmers/${farmerId}`);
       alert("Farmer deleted successfully");
       loadFarmers();
     } catch (err) {

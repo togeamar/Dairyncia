@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/contact").permitAll()
                 
                 // Admin endpoints
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN","MANAGER")
                 
                 // Manager endpoints
                 .requestMatchers("/api/manager/**").hasAnyRole("MANAGER", "ADMIN")

@@ -97,7 +97,7 @@ export default function FarmerList() {
   const saveProfile = async () => {
     try {
       await client.put(
-        `/admin/farmers/${selectedFarmer.id}`,
+        `/admin/farmers/${selectedFarmer.farmerId}`,
         profile
       );
       alert("Profile updated successfully");
@@ -112,7 +112,7 @@ export default function FarmerList() {
   const saveAddress = async () => {
     try {
       await client.post(
-        `/admin/farmers/${selectedFarmer.id}/address`,
+        `/admin/farmers/${selectedFarmer.farmerId}/address`,
         address
       );
       alert("Address saved successfully");
@@ -126,7 +126,7 @@ export default function FarmerList() {
   const saveBank = async () => {
     try {
       await client.post(
-        `/admin/farmers/${selectedFarmer.id}/bank`,
+        `/admin/farmers/${selectedFarmer.farmerId}/bank`,
         bank
       );
       alert("Bank details saved successfully");
@@ -141,7 +141,7 @@ export default function FarmerList() {
     if (!window.confirm("Are you sure you want to delete this farmer?")) return;
 
     try {
-      await client.delete(`/admin/farmers/${id}`);
+      await client.delete(`/admin/farmers/${farmerId}`);
       alert("Farmer deleted successfully");
       loadFarmers();
     } catch (err) {
@@ -181,8 +181,8 @@ export default function FarmerList() {
             </tr>
           ) : (
             farmers.map((f) => (
-              <tr key={f.id}>
-                <td>{f.id}</td>
+              <tr key={f.farmerId ?? f.id}>
+                <td>{f.farmerId ?? f.id}</td>
                 <td>{f.fullName}</td>
                 <td>{f.email}</td>
                 <td>{f.managerName}</td>
@@ -190,28 +190,28 @@ export default function FarmerList() {
                 <td>
                   <button
                     className="btn btn-sm btn-info me-1"
-                    onClick={() => openModal(f.id, "profile")}
+                    onClick={() => openModal(f.farmerId ?? f.id, "profile")}
                   >
                     Edit Profile
                   </button>
 
                   <button
                     className="btn btn-sm btn-warning me-1"
-                    onClick={() => openModal(f.id, "address")}
+                    onClick={() => openModal(f.farmerId ?? f.id, "address")}
                   >
                     Address
                   </button>
 
                   <button
                     className="btn btn-sm btn-primary me-1"
-                    onClick={() => openModal(f.id, "bank")}
+                    onClick={() => openModal(f.farmerId ?? f.id, "bank")}
                   >
                     Bank
                   </button>
 
                   <button
                     className="btn btn-sm btn-danger"
-                    onClick={() => deleteFarmer(f.id)}
+                    onClick={() => deleteFarmer(f.farmerId ?? f.id)}
                   >
                     Delete
                   </button>

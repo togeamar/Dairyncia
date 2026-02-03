@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../services/api";
+import client from "../../../services/client";
 
 export default function PendingUsers() {
   const [users, setUsers] = useState([]);
@@ -14,7 +14,7 @@ export default function PendingUsers() {
 
   const fetchManagers = async () => {
     try {
-      const response = await api.get("/admin/managers");
+      const response = await client.get("/admin/managers");
       setManagers(response.data);
     } catch (err) {
       console.log(err);
@@ -23,7 +23,7 @@ export default function PendingUsers() {
 
   const loadUsers = async () => {
     try {
-      const response = await api.get("/admin/pending-users");
+      const response = await client.get("/admin/pending-users");
       setUsers(response.data);
     } catch (err) {
       setError("Failed to load pending users");
@@ -80,7 +80,7 @@ export default function PendingUsers() {
         managerId: role === "Farmer" ? managerId : "",
       };
 
-      const response = await api.post("/admin/assign-role", payload);
+      const response = await client.post("/admin/assign-role", payload);
       alert(response.data.message);
 
       // remove user after success
@@ -169,7 +169,7 @@ export default function PendingUsers() {
                       >
                         <option value="">-- Select Manager --</option>
                         {managers.map((m) => (
-                          <option key={m.managerId} value={m.managerId}>
+                          <option key={m.managerId ?? m.id} value={m.managerId ?? m.id}>
                             {m.fullName} ({m.email})
                           </option>
                         ))}

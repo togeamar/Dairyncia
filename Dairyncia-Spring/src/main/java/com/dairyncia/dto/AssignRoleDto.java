@@ -12,4 +12,6 @@ public class AssignRoleDto {
 	
 	@NotBlank(message="role is required")
 	public String Role;
+	
+	public String ManagerId;
 }

@@ -80,6 +80,12 @@ public class AdminServiceImpl implements AdminService{
 	            Farmer farmer = Farmer.builder()
 	                    .user(user)
 	                    .build();
+	            
+	            Long managerId = Long.parseLong(dto.ManagerId);
+	            
+	            var manager = userRepository.findById(managerId).orElseThrow();
+	            
+	            farmer.setManager(manager);
 	            farmerRepository.save(farmer);
 	        }
 	    }
@@ -132,23 +138,33 @@ public class AdminServiceImpl implements AdminService{
 
 	@Override
 	public List<FarmerResponseDTO> getAllFarmers() {
-		List<User> farmers =
+		var farmers =
                 userRepository.findUsersByRole(RoleType.ROLE_FARMER);
 
         return farmers.stream()
-                .map(user -> FarmerResponseDTO.builder()
-                        .id(user.getId())             
-                        .fullName(user.getFullName())
-                        .email(user.getEmail())
-                        .createdAt(user.getCreatedAt())
-                        .build())
+                .map(user -> {
+                	Farmer farmer = farmerRepository.findByUserId(user.getId())
+                			.orElseThrow();
+                	
+                	var manager = userRepository
+                			.findById(farmer.getManager().getId())
+                			.orElseThrow();
+                	
+                	return FarmerResponseDTO.builder()
+                			.id(farmer.getId())
+                			.fullName(user.getFullName())
+                			.email(user.getEmail())
+                			.managerName(manager.getFullName())
+                			.createdAt(user.getCreatedAt())
+                			.build();
+                })
                 .toList();
 	}
 
 	@Override
     public FarmerResponseDTO getFarmerById(Long farmerId) {
-        Farmer farmer = farmerRepository.findByUserId(farmerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Farmer not found"));
+		Farmer farmer = farmerRepository.findById(farmerId)
+				.orElseThrow(() -> new ResourceNotFoundException("Farmer not found"));
 
         User user = farmer.getUser(); // <-- use getUser() directly
 
@@ -230,11 +246,13 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-    public ApiResponse deleteFarmerByUserId(Long userId) {
+    public ApiResponse deleteFarmerByUserId(Long farmerId) {
 
-        Farmer farmer = farmerRepository.findByUserId(userId)
+        Farmer farmer = farmerRepository.findById(farmerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Farmer not found"));
 
+        Long userId = farmer.getUser().getId();
+        
         bankDetailsRepository.findByUserId(userId)
                 .ifPresent(bankDetailsRepository::delete);
 
