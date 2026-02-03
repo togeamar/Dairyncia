@@ -17,5 +17,6 @@ public class FarmerResponseDTO {
 	private Long id;
 	private String fullName;
 	private String email;
+	private String managerName;
 	private LocalDateTime createdAt;
 }

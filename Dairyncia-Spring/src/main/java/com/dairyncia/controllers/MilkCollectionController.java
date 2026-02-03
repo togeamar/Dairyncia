@@ -1,5 +1,6 @@
 package com.dairyncia.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -53,10 +54,12 @@ public class MilkCollectionController {
         summary = "Get all milk collections",
         description = "Retrieve all milk collection records with farmer and manager details"
     )
-    @GetMapping("/all")
+    @GetMapping("/all/{managerId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    public ResponseEntity<List<MilkCollectionResponseDto>> getAllMilkCollections() {
-        List<MilkCollectionResponseDto> collections = milkCollectionService.getAllMilkCollections();
+    public ResponseEntity<List<MilkCollectionResponseDto>> getAllMilkCollections(@PathVariable String managerId) {
+    	Long lngManagerId = Long.parseLong(managerId);
+    	
+        List<MilkCollectionResponseDto> collections = milkCollectionService.getMilkCollectionByManagerId(lngManagerId);
         return ResponseEntity.ok(collections);
     }
 
@@ -64,10 +67,13 @@ public class MilkCollectionController {
         summary = "Get today's milk collections",
         description = "Retrieve all milk collections recorded today"
     )
-    @GetMapping("/todays")
+    @GetMapping("/todays/{managerId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    public ResponseEntity<List<MilkCollectionResponseDto>> getTodaysMilkCollections() {
-        List<MilkCollectionResponseDto> collections = milkCollectionService.getTodaysMilkCollections();
+    public ResponseEntity<List<MilkCollectionResponseDto>> getTodaysMilkCollections(@PathVariable String managerId) {
+    	LocalDate today = LocalDate.now();
+    	Long lngManagerId = Long.parseLong(managerId);
+    	
+        List<MilkCollectionResponseDto> collections = milkCollectionService.getTodaysMilkCollectionsByManagerId(lngManagerId, today);
         return ResponseEntity.ok(collections);
     }
 

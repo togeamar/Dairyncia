@@ -52,6 +52,7 @@ public class JwtTokenProvider {
                    userDetails.getUser().getEmail());
         claims.put("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", fullName);
         claims.put("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role", role);
+        claims.put("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", userDetails.getUser().getId());
         
         return Jwts.builder()
                 .claims(claims)

@@ -1,5 +1,6 @@
 package com.dairyncia.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,8 @@ import com.dairyncia.dto.FarmerProfileUpdateDTO;
 import com.dairyncia.dto.FarmerResponseDTO;
 import com.dairyncia.dto.ManagerResponseDTO;
 import com.dairyncia.dto.ManagerUpdateDTO;
+import com.dairyncia.dto.PendingUserDto;
+import com.dairyncia.entities.User;
 import com.dairyncia.repository.FarmerRepository;
 import com.dairyncia.repository.RoleRepository;
 import com.dairyncia.repository.UserRepository;
@@ -32,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 @RequiredArgsConstructor
 public class AdminController {
 
@@ -119,6 +122,18 @@ public class AdminController {
         return adminService.deleteFarmerByUserId(userId);
     }
     
+    @GetMapping("/pending-users")
+    public ResponseEntity<List<PendingUserDto>> getPendingUsers() {
+        List<User> pendingUsers = userRepository.findPendingUsers();
+        
+        List<PendingUserDto> result = new ArrayList<>();
+        for (int i = 0; i < pendingUsers.size(); i++) {
+            User u = pendingUsers.get(i);
+            result.add(new PendingUserDto(i+1,u.getId(),u.getEmail(),u.getFullName(),u.getPhoneNumber()));
+        }
+        
+        return ResponseEntity.ok(result);
+    }
 
     
      
