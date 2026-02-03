@@ -7,6 +7,43 @@ import "./Home.css";
 export function Home() {
 
   const [loggedinUser,setLoggedInUser]=useState(localStorage.getItem("loggedinuser"));
+  const [userRole, setUserRole] = useState(localStorage.getItem("type"));
+  const navigate = useNavigate();
+
+  const handleStartCollection = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    } else if (userRole?.toLowerCase() === "manager") {
+      navigate("/manager-dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleManageCollection = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    } else if (userRole?.toLowerCase() === "manager") {
+      navigate("/manager-dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleViewRates = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    } else if (userRole?.toLowerCase() === "manager") {
+      navigate("/manager-dashboard");
+    } else if (userRole?.toLowerCase() === "farmer") {
+      navigate("/farmer-dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
 
 
   return (
@@ -28,10 +65,10 @@ export function Home() {
                   Bridge the gap between local farmers and major milk companies with precision and trust.
                 </p>
                 <div className="d-flex gap-3 justify-content-center">
-                  <button className="btn btn-custom-light">
+                  <button className="btn btn-hero-custom" onClick={handleManageCollection}>
                     Manage Collection
                   </button>
-                  <button className="btn btn-outline-light rounded-pill px-4 py-2">
+                  <button className="btn btn-hero-custom" onClick={handleViewRates}>
                     View Daily Rates
                   </button>
                 </div>
@@ -84,7 +121,6 @@ export function Home() {
                 <p className="text-muted">
                   Seamlessly register local farmers, manage their profiles, and track daily milk contributions individually.
                 </p>
-                <a href="#" className="text-decoration-none fw-bold">Manage Farmers <ChevronRight size={16}/></a>
               </div>
             </div>
 
@@ -97,7 +133,6 @@ export function Home() {
                 <p className="text-muted">
                   Record fat content and SNF levels for every batch. Ensure high-quality standards before selling to big companies.
                 </p>
-                <a href="#" className="text-decoration-none fw-bold text-success">Check Quality <ChevronRight size={16}/></a>
               </div>
             </div>
 
@@ -110,7 +145,6 @@ export function Home() {
                 <p className="text-muted">
                   Consolidate collections and manage bulk sales to major dairy corporations with automated invoicing.
                 </p>
-                <a href="#" className="text-decoration-none fw-bold text-info">View Sales <ChevronRight size={16}/></a>
               </div>
             </div>
           </div>
@@ -119,9 +153,9 @@ export function Home() {
         {/* CTA Section */}
         <section className="cta-section text-center border-top">
           <div className="container">
-            <h2 className="fw-bold mb-3">Ready to optimize your collection?</h2>
+            <h2 className="fw-bold mb-3">Managers ready to optimize your collection?</h2>
             <p className="text-muted mb-4">Join hundreds of collection centers using Dairyncia.</p>
-            <button className="btn btn-primary btn-lg rounded-pill px-5">Start Collection Entry</button>
+            <button className="btn btn-primary btn-lg rounded-pill px-5" onClick={handleStartCollection}>Start Collection Entry</button>
           </div>
         </section>
 

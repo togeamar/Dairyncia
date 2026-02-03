@@ -3,27 +3,27 @@ const developers = [
   {
     name: "Suyog Joshi",
     image: "Suyog.jpeg",
-    linkedin: "https://linkedin.com"
+    linkedin: "https://www.linkedin.com/in/suyog-joshi"
   },
   {
     name: "Pradip Patil",
     image: "Pradip.jpeg",
-    linkedin: "https://linkedin.com"
+    linkedin: "https://www.linkedin.com/in/pradip-patil"
   },
   {
     name: "Yash Bambal",
     image: "YashBambalImg.JPG",
-    linkedin: "https://linkedin.com"
+    linkedin: "https://www.linkedin.com/in/yash-bambal"
   },
   {
     name: "Amar Toge",
     image: "https://via.placeholder.com/150",
-    linkedin: "https://linkedin.com"
+    linkedin: "https://www.linkedin.com/in/amar-toge"
   },
   {
     name: "Someshwar Tiwari",
     image: "Someshvar.jpeg",
-    linkedin: "https://linkedin.com"
+    linkedin: "https://www.linkedin.com/in/someshwar-tiwari"
   }
 ];
 
