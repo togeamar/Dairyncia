@@ -79,11 +79,7 @@ input.form-control:focus {
     font-weight: 700;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     
-    color: var(--accent-color);
-    background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
 }
 .welcome-heading {
     font-size: 2.8rem;
