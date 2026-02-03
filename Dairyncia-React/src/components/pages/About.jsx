@@ -17,7 +17,7 @@ const developers = [
   },
   {
     name: "Amar Toge",
-    image: "https://via.placeholder.com/150",
+    image: "0018-Amar Toge.jpg",
     linkedin: "https://www.linkedin.com/in/amar-toge"
   },
   {

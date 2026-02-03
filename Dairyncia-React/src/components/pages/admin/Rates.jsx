@@ -6,10 +6,12 @@ import "./Rates.css"
 export default function Rates(){
     const [file,setFile]=useState(null);
     const [milkType, setMilkType] = useState(1);
-    const [rates,setRates]=useState([]);
+    const [rates,setRates]=useState({ data: [] });
+    const [ratesb,setRatesB]=useState({ data: [] });
     const [error,setError]=useState("");
     const [loading,setLoading]=useState(true);
     const [pageNumberCows,setPageNumberCows]=useState(1);
+    const [pageNumberBuff,setPageNumberBuff]=useState(1);
     const [fileLoading,setFileLoading]=useState(false);
     const [successMsg, setSuccessMsg] = useState("");
 
@@ -30,12 +32,36 @@ export default function Rates(){
         loadRatesCows();
     },[pageNumberCows]);
 
+    useEffect(()=>{
+        const loadRatesBuffalow=async()=>{
+            try{
+                const response=await loadRates({milkType:2,pageNumber:pageNumberBuff})
+                setRatesB(response.data);
+                console.log(response.data);
+            }
+            catch(err){
+                setError("failed to load buffalow milk rates");
+            }
+            finally{
+                setLoading(false)
+            }
+        }
+        loadRatesBuffalow();
+    },[pageNumberBuff]);
+
     function handlecowdec() {
         if(pageNumberCows>1)
             setPageNumberCows(pageNumberCows-1)
     }
     function handlecowinc() {
         setPageNumberCows(pageNumberCows+1)
+    }
+    function handlebuffdec() {
+        if(pageNumberBuff>1)
+            setPageNumberBuff(pageNumberBuff-1)
+    }
+    function handlebuffinc() {
+        setPageNumberBuff(pageNumberBuff+1)
     }
 
 
@@ -73,6 +99,7 @@ export default function Rates(){
     }
     return (
         <Container >
+            <h2>Cow Milk Rates</h2>
              <table className="table table-hover">
                 <thead className="thead">
                 <tr>
@@ -104,6 +131,45 @@ export default function Rates(){
                 <button type="button" className="btn btn-outline-info" onClick={handlecowinc}>next page</button>
 
             </div>    
+            <h2 className="mt-2">Buffalow Milk Rates</h2>
+            <table className="table table-hover">
+                <thead className="thead">
+                <tr>
+                    <th scope="col">SNF</th>
+                    <th scope="col">FAT</th>
+                    <th scope="col">Rate</th>
+                </tr>
+               </thead>
+            </table>
+            <div className="table-wrapper">
+           
+            <table className="table table-hover">
+               
+               <tbody>
+                {ratesb.data.length===0?(
+                        <tr>
+                            <td colSpan={3} style={{ textAlign: "center" }}>
+                            No Data Found
+                            </td>
+                        </tr>
+                        ):ratesb.data.map((x)=>(
+                    <tr>
+                        <td>{x.snf}</td>
+                        <td>{x.fat}</td>
+                        <td>{x.rate}</td>
+                    </tr>
+                )
+            )}
+               </tbody>
+
+            </table>
+            </div>
+            <div className="d-flex mt-2 justify-content-between">
+                <button type="button" className="btn btn-outline-info" onClick={handlebuffdec}>previous page</button>
+                <button type="button" className="btn btn-outline-info" onClick={handlebuffinc}>next page</button>
+
+            </div>  
+            
             
             <div className="mt-2 p-4 border rounded shadow">
                 <h3>Upload Milk Rate Chart</h3>
@@ -126,8 +192,9 @@ export default function Rates(){
                     <input type="file" accept=".xlsx, .xls" onChange={onfilechange} />
                 </div>
 
-                <button onClick={handleupload}  className="btn btn-primary">
-                    Upload & Process
+                <button onClick={handleupload} disabled={fileLoading} className="btn btn-primary">
+                    
+                    {fileLoading?"Loading...":"Upload & Process"}
                 </button>
              </div>
         </Container>
