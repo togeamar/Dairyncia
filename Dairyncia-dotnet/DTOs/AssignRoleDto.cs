@@ -9,5 +9,7 @@ namespace Dairyncia.DTOs
 
         [Required]
         public string Role { get; set; } // Admin, Manager, Farmer
+
+        public string ManagerId { get; set; }
     }
 }

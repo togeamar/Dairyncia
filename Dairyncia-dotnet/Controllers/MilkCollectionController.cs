@@ -59,7 +59,7 @@ namespace Dairyncia.Controllers
                     x.MilkType == dto.MilkType &&
                     x.CreatedAt >= today &&
                     x.CreatedAt < tomorrow);
-                
+
 
             if (alreadySubmitted)
             {
@@ -71,7 +71,7 @@ namespace Dairyncia.Controllers
 
             if (!ratePerLiter.IsSuccess)
             {
-                return NotFound(new{message=ratePerLiter.Error});
+                return NotFound(new { message = ratePerLiter.Error });
             }
 
             // Create MilkCollection Entity
@@ -90,9 +90,9 @@ namespace Dairyncia.Controllers
             };
 
             // Save to DB
-            _context.MilkCollections.Add(milkCollection);        
+            _context.MilkCollections.Add(milkCollection);
             await _context.SaveChangesAsync();
-         
+
             return Ok(new
             {
                 message = "Milk collection added successfully",
@@ -103,19 +103,26 @@ namespace Dairyncia.Controllers
         }
 
         // get all entries
-        [HttpGet("all")]
+        [HttpGet("all/{managerId}")]
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> GetAllMilkCollections()
+        public async Task<IActionResult> GetAllMilkCollections(string managerId)
         {
+            var milkCollection = _context.MilkCollections;
+            var today = DateTime.Today;
+            var tomorrow = today.AddDays(1);
+
             var data = await _context.MilkCollections
                 .Include(m => m.Farmer).ThenInclude(f => f.User)
-                .Include(m => m.Manager)
+                .Include(m => m.Manager).Where(c =>
+                    c.ManagerId == managerId &&
+                    c.CreatedAt >= today &&
+                    c.CreatedAt < tomorrow)
                 .OrderByDescending(m => m.CreatedAt)
                 .Select(m => new
                 {
                     m.Id,
-                    Farmer = m.Farmer.User.Email,
-                    Manager = m.Manager.Email,
+                    Farmer = m.Farmer.User.FullName,
+                    Manager = m.Manager.FullName,
                     m.MilkType,
                     m.MilkShift,
                     m.Quantity,
@@ -131,17 +138,20 @@ namespace Dairyncia.Controllers
             return Ok(data);
         }
 
-        [HttpGet("todays")]
+        [HttpGet("todays/{managerId}")]
         [Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> GetTodaysMilkCollections()
+        public async Task<IActionResult> GetTodaysMilkCollections(string managerId)
         {
             var today = DateTime.Today;
             var tomorrow = today.AddDays(1);
 
+
             var data = await _context.MilkCollections
                 .Include(m => m.Farmer).ThenInclude(f => f.User)
                 .Include(m => m.Manager)
-                .Where(c => c.CreatedAt >= today &&
+                .Where(c =>
+                    c.ManagerId == managerId &&
+                    c.CreatedAt >= today &&
                     c.CreatedAt < tomorrow)
                 .OrderByDescending(m => m.CreatedAt)
                 .Select(m => new
@@ -179,7 +189,7 @@ namespace Dairyncia.Controllers
             return Ok(milk);
         }
 
-         
+
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateMilkCollection(
             int id,
@@ -208,7 +218,7 @@ namespace Dairyncia.Controllers
             });
         }
 
-           
+
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteMilkCollection(int id)
         {

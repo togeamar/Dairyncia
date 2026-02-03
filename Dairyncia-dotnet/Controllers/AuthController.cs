@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {   
-        Console.WriteLine("➡️ API HIT: /api/auth/register");
+        Console.WriteLine(" API HIT: /api/auth/register");
         Console.WriteLine(dto);
         var user = new ApplicationUser
         {

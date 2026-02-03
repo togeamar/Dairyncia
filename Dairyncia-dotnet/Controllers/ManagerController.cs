@@ -1,4 +1,5 @@
-﻿using Dairyncia.Enums;
+﻿using Dairyncia.DTOs;
+using Dairyncia.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -17,10 +18,11 @@ namespace Dairyncia.Controllers
         }
 
         [HttpGet]
-        [Route("get-farmer-milk-collection")]
-        public async Task<IActionResult> getAllFarmersWithMilkCollection()
+        [Route("get-farmer-milk-collection/{managerId}")]
+        public async Task<IActionResult> getAllFarmersWithMilkCollection(string managerId)
         {
             var farmerMilkData = await _context.MilkCollections
+                .Where(m => m.Farmer.ManagerId == managerId)
                 .GroupBy(m => new
                 {
                     m.FarmerId,
@@ -53,6 +55,26 @@ namespace Dairyncia.Controllers
                 .ToListAsync();
 
             return Ok(farmerMilkData);
+        }
+
+        [HttpGet]
+        [Route("get-farmer-list/{managerId}")]
+        public async Task<IActionResult> getAllFarmers(string managerId)
+        {
+            var farmers = await _context.Farmers
+            .Include(f => f.User)
+            .Include(f => f.Address)
+            .Where(f => f.ManagerId == managerId)
+            .OrderByDescending(f => f.CreatedAt)
+            .Select(f => new FarmerListDTO
+            {
+                Id = f.Id,
+                Email = f.User.Email,
+                FullName = f.User.FullName,
+                CreatedAt = f.CreatedAt
+            })
+            .ToListAsync();
+            return Ok(farmers);
         }
        
     }

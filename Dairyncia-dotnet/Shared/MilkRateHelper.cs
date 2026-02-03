@@ -13,10 +13,17 @@ public class MilkRateHelper
 
     public async Task<ServiceResult<MilkRateResultDto>> GetRatePerLiter(decimal fat, decimal snf, MilkType milkType)
     {
-        fat = Math.Floor(fat * 10) / 10;
-        snf = Math.Floor(snf * 10) / 10;
-        var milkRate=await _context.MilkRates
-            .Where(r=>r.Snf==snf && r.Fat==fat&&r.RateType==milkType)
+        fat = Math.Round(fat, 2);
+        snf = Math.Round(snf, 2);
+
+        var rate = await _context.MilkRateCells
+            .Where(x =>
+                x.MilkRateChart.MilkType == milkType &&
+                x.MilkRateChart.IsActive)
+            .OrderBy(x =>
+                Math.Abs(x.Fat - fat) +
+                Math.Abs(x.Snf - snf))
+            .Select(x => x.Rate)
             .FirstOrDefaultAsync();
         
         if (milkRate == null)
@@ -58,6 +65,8 @@ public class MilkRateHelper
             RateType = milkRate.RateType
         });
     }
+
+
 
     public async Task<decimal> CalculateAmount(decimal fat, decimal snf, decimal litres, MilkType milkType)
     {
