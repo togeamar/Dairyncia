@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PendingUserDto {
 	private int SrNo;
-	private Long USerID;
+	private Long UserId;
 	private String Email;
 	private String FullName;
 	private String Phone;

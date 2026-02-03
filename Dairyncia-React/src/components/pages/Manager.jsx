@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ManagerDashboard from "../pages/Manager/ManagerDashboard";
-import FarmerList from "./admin/FarmerList";
-import MilkCollectionList from "./admin/MilkCollectionList";
+import FarmerList from "./Manager/FarmerList";
+import MilkCollectionList from "./Manager/MilkCollectionList";
 import AddMilkModal from "../pages/Manager/AddMilkModal";
 import TodaysMilkCollectionList from "../pages/Manager/TodaysMilkCollectionList"
 import "./Manager.css";
@@ -69,7 +69,7 @@ const Manager = () => {
       <div className="mt-4">
         {activeTab === "home" && <ManagerDashboard />}
         {activeTab === "farmers" && <FarmerList />}
-        {activeTab === "milk" && <MilkCollectionList refreshKey={refreshKey} />}
+       {activeTab === "milk" && <MilkCollectionList refreshKey={refreshKey} />}
         {activeTab === "todaysMilk" && <TodaysMilkCollectionList refreshKey={ refreshKey }/>}
       </div>
 

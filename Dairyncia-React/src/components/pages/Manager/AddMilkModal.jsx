@@ -16,13 +16,14 @@ const AddMilkModal = ({ onClose, onSuccess }) => {
 
   const [errors, setErrors] = useState({});
 
-  // 🔹 Load farmers
+  //Load farmers
   useEffect(() => {
     const loadFarmers = async () => {
       try {
         const token = localStorage.getItem("token");
+        const managerId = localStorage.getItem("id");
         const res = await axios.get(
-          `${ADMIN_BASE_URL}/farmers`,
+          `${Manager_BASE_URL}/get-farmer-list/${managerId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setFarmers(res.data);
@@ -38,7 +39,7 @@ const AddMilkModal = ({ onClose, onSuccess }) => {
     setErrors({ ...errors, [e.target.name]: "" }); // clear error on change
   };
 
-  // 🔹 Custom validation
+  //Custom validation
   const validate = () => {
     const newErrors = {};
 

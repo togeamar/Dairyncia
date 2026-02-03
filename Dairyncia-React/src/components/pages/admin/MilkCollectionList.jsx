@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../services/api";
+import client from "../../../services/client";
 
 export default function MilkCollectionList() {
   const [records, setRecords] = useState([]);
@@ -15,7 +15,7 @@ export default function MilkCollectionList() {
   // Fetch records
   const fetchRecords = async () => {
     try {
-      const res = await api.get("/admin"); // milk GET added in AdminController
+      const res = await client.get("/admin"); // milk GET added in AdminController
       setRecords(res.data);
     } catch (err) {
       console.error(err);
@@ -34,7 +34,7 @@ export default function MilkCollectionList() {
     if (!window.confirm("Delete this milk record?")) return;
 
     try {
-      await api.delete(`/admin/${id}`);
+      await client.delete(`/admin/${id}`);
       fetchRecords();
     } catch {
       alert("Delete failed");
@@ -49,7 +49,7 @@ export default function MilkCollectionList() {
 
   const handleUpdate = async () => {
     try {
-      await api.put(`/admin/${editData.id}`, {
+      await client.put(`/admin/${editData.id}`, {
         quantity: editData.quantity,
         fatPercentage: editData.fatPercentage,
         snf: editData.snf,
