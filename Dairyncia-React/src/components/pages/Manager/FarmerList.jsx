@@ -48,7 +48,7 @@ export default function FarmerList() {
   // ================= OPEN MODAL =================
   const openModal = async (farmerId, formType) => {
     try {
-      const res = await client.get(`/admin/farmers/${farmerId}`);
+      const res = await client.get(`/admin/farmers/${id}`);
       const f = res.data;
 
       setSelectedFarmer(f);

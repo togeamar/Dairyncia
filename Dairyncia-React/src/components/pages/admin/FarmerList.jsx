@@ -97,7 +97,7 @@ export default function FarmerList() {
   const saveProfile = async () => {
     try {
       await client.put(
-        `/admin/farmers/${selectedFarmer.farmerId}`,
+        `/admin/farmers/${selectedFarmer.id}`,
         profile
       );
       alert("Profile updated successfully");
@@ -112,7 +112,7 @@ export default function FarmerList() {
   const saveAddress = async () => {
     try {
       await client.post(
-        `/admin/farmers/${selectedFarmer.farmerId}/address`,
+        `/admin/farmers/${selectedFarmer.id}/address`,
         address
       );
       alert("Address saved successfully");
@@ -126,7 +126,7 @@ export default function FarmerList() {
   const saveBank = async () => {
     try {
       await client.post(
-        `/admin/farmers/${selectedFarmer.farmerId}/bank`,
+        `/admin/farmers/${selectedFarmer.id}/bank`,
         bank
       );
       alert("Bank details saved successfully");
@@ -136,12 +136,12 @@ export default function FarmerList() {
     }
   };
 
-  //  DELETE FARMER 
-  const deleteFarmer = async (farmerId) => {
+  // ================= DELETE FARMER =================
+  const deleteFarmer = async (id) => {
     if (!window.confirm("Are you sure you want to delete this farmer?")) return;
 
     try {
-      await client.delete(`/admin/farmers/${farmerId}`);
+      await client.delete(`/admin/farmers/${id}`);
       alert("Farmer deleted successfully");
       loadFarmers();
     } catch (err) {
