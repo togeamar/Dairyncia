@@ -7,9 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-
-
-
 namespace Dairyncia.Controllers
 {
     [ApiController]
@@ -62,7 +59,7 @@ namespace Dairyncia.Controllers
                     x.MilkType == dto.MilkType &&
                     x.CreatedAt >= today &&
                     x.CreatedAt < tomorrow);
-                
+
 
             if (alreadySubmitted)
             {
@@ -74,7 +71,7 @@ namespace Dairyncia.Controllers
 
             if (!ratePerLiter.IsSuccess)
             {
-                return NotFound(new{message=ratePerLiter.Error});
+                return NotFound(new { message = ratePerLiter.Error });
             }
 
             // Create MilkCollection Entity
@@ -93,9 +90,9 @@ namespace Dairyncia.Controllers
             };
 
             // Save to DB
-            _context.MilkCollections.Add(milkCollection);        
+            _context.MilkCollections.Add(milkCollection);
             await _context.SaveChangesAsync();
-         
+
             return Ok(new
             {
                 message = "Milk collection added successfully",
@@ -152,7 +149,7 @@ namespace Dairyncia.Controllers
             var data = await _context.MilkCollections
                 .Include(m => m.Farmer).ThenInclude(f => f.User)
                 .Include(m => m.Manager)
-                .Where(c => 
+                .Where(c =>
                     c.ManagerId == managerId &&
                     c.CreatedAt >= today &&
                     c.CreatedAt < tomorrow)
@@ -194,32 +191,22 @@ namespace Dairyncia.Controllers
 
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateMilkCollection(int id,[FromBody] UpdateMilkCollectionDto dto)
+        public async Task<IActionResult> UpdateMilkCollection(
+            int id,
+            [FromBody] UpdateMilkCollectionDto dto)
         {
-            var managerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var milk = await _context.MilkCollections
-                .FirstOrDefaultAsync(x => x.Id == id && x.ManagerId == managerId);
-
+            var milk = await _context.MilkCollections.FindAsync(id);
             if (milk == null)
-                return Forbid("You cannot edit this record");
+                return NotFound("Milk collection not found");
 
-            // Round Input
-            var fat = Math.Round(dto.FatPercentage, 2);
-            var snf = Math.Round(dto.SNF, 2);
-
-            // Get Nearest Rate
             var ratePerLiter = await _milkRateHelper
-                .GetRatePerLiter(fat, snf, milk.MilkType);
+                .GetRatePerLiter(dto.FatPercentage, dto.SNF, milk.MilkType);
 
-            // ⭐ REMOVE RATE == 0 CHECK (IMPORTANT)
-
-            // Update Values
             milk.Quantity = dto.Quantity;
-            milk.FatPercentage = fat;
-            milk.SNF = snf;
-            milk.RatePerLiter = ratePerLiter;
-            milk.TotalAmount = Math.Round(ratePerLiter * dto.Quantity, 2);
+            milk.FatPercentage = dto.FatPercentage;
+            milk.SNF = dto.SNF;
+            milk.RatePerLiter = ratePerLiter.Data.Rate;
+            milk.TotalAmount = ratePerLiter.Data.Rate * dto.Quantity;
 
             await _context.SaveChangesAsync();
 
@@ -227,10 +214,10 @@ namespace Dairyncia.Controllers
             {
                 message = "Milk collection updated successfully",
                 milk.Id,
-                milk.RatePerLiter,
                 milk.TotalAmount
             });
         }
+
 
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteMilkCollection(int id)

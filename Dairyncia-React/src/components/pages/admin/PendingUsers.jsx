@@ -98,6 +98,8 @@ export default function PendingUsers() {
         delete copy[user.userId];
         return copy;
       });
+
+      await fetchManagers();
     } catch (err) {
       alert(err.response?.data || "Failed to assign role");
     } finally {

@@ -68,7 +68,7 @@ namespace Dairyncia.Controllers
             .OrderByDescending(f => f.CreatedAt)
             .Select(f => new FarmerListDTO
             {
-                FarmerId = f.Id,
+                Id = f.Id,
                 Email = f.User.Email,
                 FullName = f.User.FullName,
                 CreatedAt = f.CreatedAt

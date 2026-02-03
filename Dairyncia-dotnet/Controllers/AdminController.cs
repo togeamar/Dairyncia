@@ -138,7 +138,7 @@ namespace Dairyncia.Controllers
                 .OrderByDescending(f => f.CreatedAt)
                 .Select(f => new FarmerListDTO
                 {
-                    FarmerId = f.Id,
+                    Id = f.Id,
                     Email = f.User.Email,
                     FullName = f.User.FullName,
                     ManagerName = f.ManagerId != null && managersDict.ContainsKey(f.ManagerId)
