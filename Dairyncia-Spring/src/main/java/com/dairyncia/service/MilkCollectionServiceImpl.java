@@ -127,6 +127,16 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<MilkCollectionResponseDto> getMilkCollectionByManagerId(Long managerId) {
+
+        return milkCollectionRepository.findByManagerId(managerId)
+                .stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -194,6 +204,19 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
 
         milkCollectionRepository.deleteById(id);
         log.info("Milk collection deleted: ID={}", id);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<MilkCollectionResponseDto> getTodaysMilkCollectionsByManagerId(Long managerId, LocalDate today) {
+
+    	LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+
+        return milkCollectionRepository
+                .findTodaysByManagerId(managerId, startOfDay, endOfDay)
+                .stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
     }
 
     /**

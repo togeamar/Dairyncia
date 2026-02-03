@@ -1,5 +1,6 @@
 package com.dairyncia.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,13 @@ public interface MilkCollectionService {
     MilkCollectionResponseDto getMilkCollectionById(Long id);
     
     /**
+     * Get milk collection by Manager ID
+     */
+    List<MilkCollectionResponseDto> getMilkCollectionByManagerId(Long managerId);
+    
+    List<MilkCollectionResponseDto> getTodaysMilkCollectionsByManagerId(Long managerId, LocalDate today);
+    
+    /**
      * Update milk collection
      */
     MilkCollectionResponseDto updateMilkCollection(Long id, UpdateMilkCollectionDto dto);
@@ -39,4 +47,6 @@ public interface MilkCollectionService {
      * Delete milk collection
      */
     void deleteMilkCollection(Long id);
+
+	
 }

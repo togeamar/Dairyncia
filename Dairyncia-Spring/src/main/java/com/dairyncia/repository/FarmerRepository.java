@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.dairyncia.dto.FarmerListDTO;
 import com.dairyncia.entities.Farmer;
 import com.dairyncia.entities.User;
 
@@ -22,6 +23,22 @@ public interface FarmerRepository extends JpaRepository<Farmer, Long> {
             JOIN FETCH f.user u
         """)
         List<Farmer> findAllFarmers();
+    
+    @Query("""
+    	    SELECT new com.dairyncia.dto.FarmerListDTO(
+    	        f.id,
+    	        u.email,
+    	        u.fullName,
+    	        f.createdAt,
+    	        m.fullName
+    	    )
+    	    FROM Farmer f
+    	    JOIN f.user u
+    	    LEFT JOIN f.manager m
+    	    WHERE m.id = :managerId
+    	    ORDER BY f.createdAt DESC
+    	""")
+	List<FarmerListDTO> findFarmersByManagerId(String managerId);
     
 //    @Query("""
 //    		SELECT f FROM FARMER f

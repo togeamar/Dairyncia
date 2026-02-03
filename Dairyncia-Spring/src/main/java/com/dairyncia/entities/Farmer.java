@@ -22,6 +22,11 @@ public class Farmer extends BaseEntity{
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", insertable = false, updatable = false)
     private Address address;
+    
+ // Manager (Many farmers → One manager)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    private User manager;
 
     @OneToMany(mappedBy = "farmer", cascade = CascadeType.ALL)
     @Builder.Default
